@@ -1,3 +1,5 @@
+
+
 #' SCS
 #'
 #' Create a consensus from scaleNet embedded method results
