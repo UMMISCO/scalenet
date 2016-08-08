@@ -23,10 +23,14 @@ createSubOutputGraphs <- function( ioSubEnv ){
     # Build a call template
     cmd.template <- ""
     if(ioSubEnv$recons.method == "bayes_hc"){
-      cmd.template <- paste( "rMethod.hc(argInData = '", subInData.filePath.template, "', argOutDir = '", subOutData.filePath.template, "', argScore = '", ioSubEnv$recons.param[["bayes_hc"]][["score"]], "', argRestart = ", ioSubEnv$recons.param[["bayes_hc"]][["restart"]], ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
+      cmd.template <- paste( "rMethod.hc(argInData = '", subInData.filePath.template, "', argOutDir = '", subOutData.filePath.template,
+                             "', argScore = '", ioSubEnv$recons.param[["bayes_hc"]][["score"]], "', argRestart = ",
+                             ioSubEnv$recons.param[["bayes_hc"]][["restart"]], ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
 
     } else if(ioSubEnv$recons.method == "aracne"){
-      cmd.template <- paste( "rMethod.aracne(argInData = '", subInData.filePath.template, "', argOutDir = '", subOutData.filePath.template, "', argEstimator = '", ioSubEnv$recons.param[["aracne"]][["estimator"]], "', argEpsilon = ", ioSubEnv$recons.param[["aracne"]][["epsilon"]], ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
+      cmd.template <- paste( "rMethod.aracne(argInData = '", subInData.filePath.template, "', argOutDir = '", subOutData.filePath.template,
+                             "', argEstimator = '", ioSubEnv$recons.param[["aracne"]][["estimator"]], "', argEpsilon = ",
+                             ioSubEnv$recons.param[["aracne"]][["epsilon"]], ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
     }
 
     # --> set with the eigen value number and sign

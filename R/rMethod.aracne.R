@@ -27,7 +27,7 @@ rMethod.aracne <- function(argInData, argOutDir, argEstimator = "mi.mm", argEpsi
   # ----
 
   #### Load the raw data file & Make sure all columns are factors, then convert to numeric
-  inputData.df <- read.table(file = argInData, header = TRUE, stringsAsFactor = FALSE, sep = "\t")
+  inputData.df <- read.table(file = argInData, header = TRUE, stringsAsFactor = FALSE, sep = "\t", check.names = FALSE)
   inputData.df[, colnames(inputData.df)] <- as.data.frame(lapply(inputData.df[, colnames(inputData.df)] , factor))
 
   # if the estimator is not "mi.", the input data should be numeric

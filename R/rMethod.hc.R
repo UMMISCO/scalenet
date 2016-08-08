@@ -27,8 +27,10 @@ rMethod.hc <- function(argInData, argOutDir, argScore = "bde", argRestart = 20, 
   }
 
   #### Load the raw data file
-  inputData.df <- read.table(file = argInData, header = TRUE, stringsAsFactor = FALSE, sep = "\t")
+  inputData.df <- read.table(file = argInData, header = TRUE, stringsAsFactor = FALSE, sep = "\t", check.names = FALSE)
   if(ncol(inputData.df)<=2){quit(save = "no", status = 0)}
+
+  head(inputData.df)
 
   #### Remove NA values if any
   naRows <- unique(which(is.na(inputData.df), arr.ind = T)[,1])

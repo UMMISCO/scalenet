@@ -34,7 +34,6 @@ scaleNet.gatherSubGraphs <- function(ioSubEnv, iVarSpl){
 
   # --> Create a data frame for complementary information with the rownames corresponding to globalNet
   globalNet.cmpl <- as.data.frame(matrix(ncol = length(globalNet.cmpl.colnames), nrow = nrow(globalNet)))
-  print(rownames(globalNet))
   rownames(globalNet.cmpl) <- rownames(globalNet)
   colnames(globalNet.cmpl) <- globalNet.cmpl.colnames
 
@@ -93,7 +92,7 @@ scaleNet.gatherSubGraphs <- function(ioSubEnv, iVarSpl){
 
         # Find the rownames of the new format subgraph in globalNet data file
         tmp.match <- match(rownames(tmp.subNet.newFormat), rownames(globalNet))
-        print(tmp.match)
+
         # Add the counts from the subgraph to global net
         globalNet[tmp.match,] <-(globalNet[tmp.match,] + tmp.subNet.newFormat[c(1:length(tmp.match)),])
 
@@ -156,6 +155,7 @@ scaleNet.gatherSubGraphs <- function(ioSubEnv, iVarSpl){
       tmp.subNet.newFormat <- matrix(0, ncol = ncol(globalNet), nrow = nrow(tmp.subNet) )
       # --> same columns as globalNet
       colnames(tmp.subNet.newFormat) <- colnames(globalNet)
+
       # --> same row as subNet
       rownames(tmp.subNet.newFormat) <- paste(tmp.subNet[,"x"], tmp.subNet[,"y"], sep = "_<<_")
 
