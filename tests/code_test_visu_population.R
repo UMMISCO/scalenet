@@ -19,8 +19,8 @@
 library(ScaleNet)
 
 
-scalenet(argInData="/Users/eprifti/Research/workspace_r/predomics/test/test_visu_population/pop2mat.txt",
-         argOutDir="/Users/eprifti/Research/workspace_r/predomics/test/test_visu_population/scalent_results",
+scalenet(argInData="/Users/eprifti/Research/workspace_r/scalenet/tests/pop2mat.txt",
+         argOutDir="/Users/eprifti/Research/workspace_r/scalenet/tests/scalent_results",
          argEigenPerc = -1, argVarPerc=0.05,
          argSubsetType = "spectral", argReconsMeth = "bayes_hc",
          argReconsParam = list(bayes_hc = list(score = "bde", restart = 20)),
@@ -28,16 +28,16 @@ scalenet(argInData="/Users/eprifti/Research/workspace_r/predomics/test/test_visu
          argNbCPU = 6, argVerbose = TRUE)
 
 
-scalenet(argInData="/Users/eprifti/Research/workspace_r/predomics/test/test_visu_population/pop2mat.txt",
-         argOutDir="/Users/eprifti/Research/workspace_r/predomics/test/test_visu_population/scalent_results",
+scalenet(argInData="/Users/eprifti/Research/workspace_r/scalenet/tests/pop2mat.txt",
+         argOutDir="/Users/eprifti/Research/workspace_r/scalenet/tests/scalent_results",
          argEigenPerc = -1, argVarPerc=0.05,
          argSubsetType = "spectral", argReconsMeth = "aracne",
          argReconsParam = list(aracne = list(epsilon = 0, estimator = "mi.mm")),
          argPresFreqThresh = c(0.5, 1), argNbSamples = 50000, argNumSeed = 6196,
          argNbCPU = 6, argVerbose = TRUE)
 
-SCS(scaleNetDir="/Users/eprifti/Research/workspace_r/predomics/test/test_visu_population/scalent_results",
-    argInData="/Users/eprifti/Research/workspace_r/predomics/test/test_visu_population/pop2mat.txt",
+SCS(scaleNetDir="/Users/eprifti/Research/workspace_r/scalenet/tests/scalent_results",
+    argInData="/Users/eprifti/Research/workspace_r/scalenet/tests/pop2mat.txt",
     argReconsMeth = c("aracne", "bayes_hc"),
     argReconsMethInfo = list(aracne = list(ort = "n", eweight ="epresenceScore"),
                              bayes_hc = list(ort = "y", eweight = "ecorr")),
@@ -68,13 +68,13 @@ size <- as.numeric(as.character(taxo$size)); plot(size)
 
 
 fname <- "scalent_results/consensusGraph/pop2mat_consensusNetpresFreq1/edgesList.txt"
-upper.perc <- 3
-upper.fix <- 307
+# upper.perc <- 3
+# upper.fix <- 307
 
 # load the edge information for spectral3off2 network
 edges <- read.delim(fname, as.is = TRUE); dim(edges) # 121278 edges and 7 columns
 edges.raw <- edges # save it
-#edges <- edges[edges$type=="FP",]; dim(edges) # 6389 edges
+edges <- edges[!is.na(edges$eorientScore),]; dim(edges) # 6389 edges
 colnames(edges)[1:2] <- c("from","to")
 edges$from <- gsub("_",":",edges$from)
 edges$to <- gsub("_",":",edges$to)
@@ -135,7 +135,7 @@ edges.ext <- ddply(edges, .variables=c("from", "to"), function(x) data.frame(F1(
 gD <- set.edge.attribute(gD, "similarity", index = E(gD), value = 0)
 E(gD)[as.character(edges.ext$from) %--% as.character(edges.ext$to)]$similarity <- as.numeric(edges.ext$dice)
 # Edge color
-E(gD)$color <- c("#DC143C","#A6A6A6")[as.factor(factor(sign(E(gD)$diff), levels=c('-1','1')))]
+E(gD)$color <- c("#DC143C","#A6A6A6")[as.factor(factor(sign(E(gD)$eorient), levels=c('-1','1')))]
 
 # #check things out
 # node <- "akker"
@@ -166,9 +166,10 @@ l <- layout.fruchterman.reingold(gD)
 # l <- layout.lgl(gD)
 # l <- layout.graphopt(gD)
 
-pdf(file=paste(fname,"igraph_",upper.perc,"_perc.pdf",sep=""),width = 10,height = 10)
+pdf(file=paste("igraph.pdf",sep=""),width = 10,height = 10)
 #pdf(file=paste(fname,"igraph_",upper.fix,"_fix.pdf",sep=""),width = 10,height = 10)
-plot(gD, vertex.label = NA, vertex.size=log10(V(gD)$size), edge.arrow.size=.4, asp=TRUE, rescale=TRUE, layout=l, edge.arrow.mode = E(gD)$infOrt)
+#plot(gD, vertex.label = NA, vertex.size=log10(V(gD)$size), edge.arrow.size=.4, asp=TRUE, rescale=TRUE, layout=l, edge.arrow.mode = E(gD)$infOrt)
+plot(gD, vertex.label = NA, vertex.size=log10(V(gD)$size), edge.arrow.size=.4, asp=TRUE, rescale=TRUE, layout=l)
 dev.off()
-save(gD, edges, edges.raw, l, file=paste(fname,"graph_data_",upper.perc,"_perc.rda",sep=""))
+save(gD, edges, edges.raw, l, file=paste("graph_data.rda",sep=""))
 #save(gD, edges, edges.raw, l, file=paste(fname,"graph_data_",upper.fix,"_fix.rda",sep=""))
