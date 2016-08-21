@@ -4,15 +4,16 @@
 \alias{scs}
 \title{scs}
 \usage{
-scs(scaleNetDir, argInData, argReconsMeth = c("aracne", "bayes_hc"),
+scs(workspaceDir, argInData, argReconsMeth = c("aracne", "bayes_hc"),
   argReconsMethInfo = list(aracne = list(ort = "n", eweight =
   "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
   argReconsParam = list(aracne = list(estimator = "mi.mm", epsilon = 0.001),
   bayes_hc = list(score = "bde", restart = 21), varPerc = 0.2),
-  argPresFreqThresh = c(0.5, 1), argVerbose = FALSE)
+  argPresFreqThresh = c(0.5, 1), clean.workspace = TRUE,
+  argVerbose = FALSE)
 }
 \arguments{
-\item{scaleNetDir}{output directory file path (to be created)}
+\item{workspaceDir}{output directory file path (to be created)}
 
 \item{argInData}{input data file, a tab separated file with features in columns and observations in rows}
 
@@ -26,6 +27,8 @@ provided information are: "ort" (the method provides orientation n/y) and edge w
 specific to scalenet, namely: "nbSamples", "numSeed", "nbCPU", "eigenPerc", "varPerc" and "subsetType"}
 
 \item{argPresFreqThresh}{a numeric vector of threshold for the frequency of edges from all subgraphs}
+
+\item{clean.workspace}{if FALSE, all output files are kept}
 
 \item{argVerbose}{display details}
 }

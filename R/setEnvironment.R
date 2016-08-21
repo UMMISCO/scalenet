@@ -81,8 +81,10 @@ setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
   # --> Create the output directory
   ioSubEnv$output.dirPath <- outDir
   if(dir.exists(ioSubEnv$output.dirPath)){
-    print(ioSubEnv$output.dirPath)
-    warning("# --Wlib3-- Output directory path already exists!")
+    if(ioSubEnv$verbose){
+      print(ioSubEnv$output.dirPath)
+      print("# --Wlib3-- Output directory path already exists!")
+    }
   }else{dir.create(ioSubEnv$output.dirPath)}
 
   # --> Percent of vertices per subgraph / of eigen vectors
