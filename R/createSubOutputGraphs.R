@@ -5,7 +5,7 @@
 
 createSubOutputGraphs <- function( ioSubEnv ){
 
-  # Set the directory that will contain all the reconstructed subgraphs
+    # Set the directory that will contain all the reconstructed subgraphs
   tmp.dirPath <- file.path(ioSubEnv$output.dirPath, "subGraphs")
   if(!dir.exists(tmp.dirPath)){dir.create(tmp.dirPath)}
   if(!dir.exists(file.path(tmp.dirPath, "subOutput"))){dir.create(file.path(tmp.dirPath, "subOutput"))}
@@ -24,13 +24,13 @@ createSubOutputGraphs <- function( ioSubEnv ){
     cmd.template <- ""
     if(ioSubEnv$recons.method == "bayes_hc"){
       cmd.template <- paste( "rMethod.hc(argInData = '", subInData.filePath.template, "', argOutDir = '", subOutData.filePath.template,
-                             "', argScore = '", ioSubEnv$recons.param[["bayes_hc"]][["score"]], "', argRestart = ",
-                             ioSubEnv$recons.param[["bayes_hc"]][["restart"]], ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
+                             "', argScore = '", ioSubEnv$recons.param[["score"]], "', argRestart = ",
+                             ioSubEnv$recons.param[["restart"]], ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
 
     } else if(ioSubEnv$recons.method == "aracne"){
       cmd.template <- paste( "rMethod.aracne(argInData = '", subInData.filePath.template, "', argOutDir = '", subOutData.filePath.template,
-                             "', argEstimator = '", ioSubEnv$recons.param[["aracne"]][["estimator"]], "', argEpsilon = ",
-                             ioSubEnv$recons.param[["aracne"]][["epsilon"]], ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
+                             "', argEstimator = '", ioSubEnv$recons.param[["estimator"]], "', argEpsilon = ",
+                             ioSubEnv$recons.param[["epsilon"]], ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
     }
 
     # --> set with the eigen value number and sign
@@ -40,7 +40,6 @@ createSubOutputGraphs <- function( ioSubEnv ){
                               cmd.template.split[3], sep='')
 
     cmd.all <- c(gsub("XXX_SIGN_XXX", "pos", cmd.iEigen.paste), gsub("XXX_SIGN_XXX", "neg", cmd.iEigen.paste))
-    # print(cmd.all[1]); stop()
 
     # Call the command in parallel
     doParallel::registerDoParallel(cores = ioSubEnv$nbCPU)
@@ -124,7 +123,6 @@ createSubOutputGraphs <- function( ioSubEnv ){
     }
 
     cmd.all <- cmd.iClust.paste
-    # print(cmd.all[1]); stop()
 
     # Call the command in parallel
     # i = 1

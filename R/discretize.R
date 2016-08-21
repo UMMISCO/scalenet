@@ -66,6 +66,15 @@ discretize <- function(argInData, argMaxClusters = 5, argVerbose = FALSE){
         next
       }
     }
+    
+    # Check if the variable is not a constant
+    if(length(unique(myCont.values[myCont.values.notNa.idx])) ==  1){
+      
+      # If yes, set to 1 and go next
+      data.disc[myCont.values.notNa.idx, strNumVar] <- 1
+      next
+    }
+    
 
     # Identify the outliers
     # ----

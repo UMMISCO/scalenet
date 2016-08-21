@@ -1,4 +1,4 @@
-#' SCS
+#' scs
 #'
 #' Create a consensus from scaleNet embedded method results
 #'
@@ -6,19 +6,53 @@
 #'
 #' @export
 
+# Error code from 10,000 to 10,099
 
-# SCS( scaleNetDir = "~/Projects/Projects_largeScale/data/benchmark/andes/output/test_pck_spectral",
+# scs( scaleNetDir = "~/Projects/Projects_largeScale/data/benchmark/andes/output/test_pck_spectral",
 #      argInData = "~/Projects/Projects_largeScale/data/benchmark/andes/input/rawData/andes_20000/andes_20000_0001.txt",
 #      argReconsMeth = c("aracne", "bayes_hc"),
 #      argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"),
-#                               bayes_hc = list(ort = "y", eweight = "ecorr")), argReconsParam = NULL,
-#      argPresFreqThresh = c(0.3, 0.8))
+#                               bayes_hc = list(ort = "y", eweight = "ecorr")),
+#      argReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001),
+#                              bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
+#      argPresFreqThresh = c(0.3, 0.8), argVerbose = TRUE)
 
-SCS <- function( scaleNetDir, argInData,
+scs <- function( scaleNetDir, argInData,
                  argReconsMeth = c("aracne", "bayes_hc"),
                  argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"),
-                                          bayes_hc = list(ort = "y", eweight = "ecorr")), argReconsParam = NULL,
-                 argPresFreqThresh = c(0.5, 1) ){
+                                          bayes_hc = list(ort = "y", eweight = "ecorr")),
+                 argReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001),
+                                       bayes_hc = list(score="bde", restart=21),
+                                       varPerc = 0.2),
+                 argPresFreqThresh = c(0.5, 1), argVerbose = FALSE ){
+
+  # Check if the scalenet outputs already exists
+  # if not, do scalenet for the method given to scs
+  # ----------------------------------------------------
+  if(!file.exists(scaleNetDir)){
+
+    # Check if argRconsParam is given
+    # if not, quit...
+    if(is.null(argReconsParam)){stop("# --Err-- 1000")}
+
+    # Loop on the reconstruction methods
+    # strMeth = argReconsMeth[1]
+    for(strMeth in argReconsMeth){
+
+      scalenet( argInData = argInData,
+                argOutDir = scaleNetDir,
+                argReconsMeth = strMeth,
+                argReconsParam = argReconsParam[[strMeth]],
+                argPresFreqThresh = argPresFreqThresh,
+                argNbSamples = argReconsParam[["nbSamples"]],
+                argNumSeed = argReconsParam[["numSeed"]],
+                argNbCPU = argReconsParam[["nbCPU"]],
+                argVerbose = argVerbose,
+                argEigenPerc = argReconsParam[["eigenPerc"]],
+                argVarPerc = argReconsParam[["varPerc"]],
+                argSubsetType = argReconsParam[["subsetType"]])
+    }
+  }
 
   # Get all variable names, pairs and make labels for the edgesList/adjMat template files
   # ----------------------------------------------------

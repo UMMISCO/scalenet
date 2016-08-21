@@ -24,6 +24,8 @@
 #'
 #' @export
 
+# Error code from 20,000 to 20,099
+
 # scalenet(argInData = "~/Projects/Projects_largeScale/data/benchmark/andes/input/rawData/andes_20000/andes_20000_0001.txt",
 #          argOutDir = "~/Projects/Projects_largeScale/data/benchmark/andes/output/test_pck_spectral",
 #          argVarPerc = 0.2, argReconsMeth = "aracne", argReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001)),
@@ -59,7 +61,6 @@ scalenet <- function(argInData, argOutDir, argEigenPerc = -1, argVarPerc, argSub
                            presFreqThresh = argPresFreqThresh,
                            nbSamples = argNbSamples, numSeed = argNumSeed, nbCPU = argNbCPU,
                            verbose = argVerbose, ioSubEnv = subEnv )
-
   # -----------------
   #  Recall the main parameters
   # -----------------
