@@ -12,7 +12,22 @@ scs(scaleNetDir, argInData, argReconsMeth = c("aracne", "bayes_hc"),
   argPresFreqThresh = c(0.5, 1), argVerbose = FALSE)
 }
 \arguments{
-\item{ioSubEnv}{a global environment variable}
+\item{scaleNetDir}{output directory file path (to be created)}
+
+\item{argInData}{input data file, a tab separated file with features in columns and observations in rows}
+
+\item{argReconsMeth}{string vector with reconstruction method name}
+
+\item{argReconsMethInfo}{list of complementary information on each reconstruction method. The
+provided information are: "ort" (the method provides orientation n/y) and edge weight "eweight"
+(epresenceScore/ecorr)}
+
+\item{argReconsParam}{list specific parameters for each reconstruction method and complementary parameters
+specific to scalenet, namely: "nbSamples", "numSeed", "nbCPU", "eigenPerc", "varPerc" and "subsetType"}
+
+\item{argPresFreqThresh}{a numeric vector of threshold for the frequency of edges from all subgraphs}
+
+\item{argVerbose}{display details}
 }
 \description{
 Create a consensus from scaleNet embedded method results

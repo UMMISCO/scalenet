@@ -2,7 +2,16 @@
 #'
 #' Create a consensus from scaleNet embedded method results
 #'
-#' @param ioSubEnv a global environment variable
+#' @param scaleNetDir output directory file path (to be created)
+#' @param argInData input data file, a tab separated file with features in columns and observations in rows
+#' @param argReconsMeth string vector with reconstruction method name
+#' @param argReconsMethInfo list of complementary information on each reconstruction method. The
+#' provided information are: "ort" (the method provides orientation n/y) and edge weight "eweight"
+#' (epresenceScore/ecorr)
+#' @param argReconsParam list specific parameters for each reconstruction method and complementary parameters
+#' specific to scalenet, namely: "nbSamples", "numSeed", "nbCPU", "eigenPerc", "varPerc" and "subsetType"
+#' @param argPresFreqThresh a numeric vector of threshold for the frequency of edges from all subgraphs
+#' @param argVerbose display details
 #'
 #' @export
 
