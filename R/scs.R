@@ -1,24 +1,69 @@
-#' SCS
+#' scs
 #'
 #' Create a consensus from scaleNet embedded method results
 #'
-#' @param ioSubEnv a global environment variable
+#' @param workspaceDir output directory file path (to be created)
+#' @param argInData input data file, a tab separated file with features in columns and observations in rows
+#' @param argReconsMeth string vector with reconstruction method name
+#' @param argReconsMethInfo list of complementary information on each reconstruction method. The
+#' provided information are: "ort" (the method provides orientation n/y) and edge weight "eweight"
+#' (epresenceScore/ecorr)
+#' @param argReconsParam list specific parameters for each reconstruction method and complementary parameters
+#' specific to scalenet, namely: "nbSamples", "numSeed", "nbCPU", "eigenPerc", "varPerc" and "subsetType"
+#' @param argPresFreqThresh a numeric vector of threshold for the frequency of edges from all subgraphs
+#' @param clean.workspace if FALSE, all output files are kept
+#' @param argVerbose display details
 #'
 #' @export
 
+# Error code from 10,000 to 10,099
 
-# SCS( scaleNetDir = "~/Projects/Projects_largeScale/data/benchmark/andes/output/test_pck_spectral",
+# scs( workspaceDir = "~/Projects/Projects_largeScale/data/benchmark/andes/output/test_pck_spectral",
 #      argInData = "~/Projects/Projects_largeScale/data/benchmark/andes/input/rawData/andes_20000/andes_20000_0001.txt",
 #      argReconsMeth = c("aracne", "bayes_hc"),
 #      argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"),
-#                               bayes_hc = list(ort = "y", eweight = "ecorr")), argReconsParam = NULL,
-#      argPresFreqThresh = c(0.3, 0.8))
+#                               bayes_hc = list(ort = "y", eweight = "ecorr")),
+#      argReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001),
+#                              bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
+#      argPresFreqThresh = c(0.3, 0.8), argVerbose = TRUE, clean.workspace = TRUE)
 
-SCS <- function( scaleNetDir, argInData,
+scs <- function( workspaceDir, argInData,
                  argReconsMeth = c("aracne", "bayes_hc"),
                  argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"),
-                                          bayes_hc = list(ort = "y", eweight = "ecorr")), argReconsParam = NULL,
-                 argPresFreqThresh = c(0.5, 1) ){
+                                          bayes_hc = list(ort = "y", eweight = "ecorr")),
+                 argReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001),
+                                       bayes_hc = list(score="bde", restart=21),
+                                       varPerc = 0.2),
+                 argPresFreqThresh = c(0.5, 1), clean.workspace = TRUE,
+                 argVerbose = FALSE ){
+
+  # Check if the scalenet outputs already exists
+  # if not, do scalenet for the method given to scs
+  # ----------------------------------------------------
+  if(!file.exists(workspaceDir)){
+
+    # Check if argRconsParam is given
+    # if not, quit...
+    if(is.null(argReconsParam)){stop("# --Err-- 1000")}
+
+    # Loop on the reconstruction methods
+    # strMeth = argReconsMeth[1]
+    for(strMeth in argReconsMeth){
+
+      scalenet( argInData = argInData,
+                argOutDir = workspaceDir,
+                argReconsMeth = strMeth,
+                argReconsParam = argReconsParam[[strMeth]],
+                argPresFreqThresh = argPresFreqThresh,
+                argNbSamples = argReconsParam[["nbSamples"]],
+                argNumSeed = argReconsParam[["numSeed"]],
+                argNbCPU = argReconsParam[["nbCPU"]],
+                argVerbose = argVerbose,
+                argEigenPerc = argReconsParam[["eigenPerc"]],
+                argVarPerc = argReconsParam[["varPerc"]],
+                argSubsetType = argReconsParam[["subsetType"]])
+    }
+  }
 
   # Get all variable names, pairs and make labels for the edgesList/adjMat template files
   # ----------------------------------------------------
@@ -43,11 +88,11 @@ SCS <- function( scaleNetDir, argInData,
 
   # Create a output consensus directory for this scalenet output
   # ------
-  tmp.consensus.dirPath <- file.path(scaleNetDir, "consensusGraph")
+  tmp.consensus.dirPath <- file.path(workspaceDir, "consensusGraph")
   if(!dir.exists(tmp.consensus.dirPath)){dir.create(tmp.consensus.dirPath)}
 
   # Create a directory path template to load the network learnt by scalenet
-  scaleNetDir.filtered.template <- file.path( scaleNetDir, "globalGraph",
+  workspaceDir.filtered.template <- file.path( workspaceDir, "globalGraph",
                                           paste(gsub(".txt", "", basename(argInData)),
                                                 "_globalNet_presFreq_XXX_PRESFREQ_XXX", sep = ""))
   # Loop of filtered global subgraphes
@@ -55,11 +100,11 @@ SCS <- function( scaleNetDir, argInData,
   for(iPresFreq in argPresFreqThresh){
 
     # Update the presFreq
-    scaleNetDir.filtered.freq <- gsub("_XXX_PRESFREQ_XXX", iPresFreq, scaleNetDir.filtered.template)
+    workspaceDir.filtered.freq <- gsub("_XXX_PRESFREQ_XXX", iPresFreq, workspaceDir.filtered.template)
 
     # Create a consensus directory for this edge frequency
     tmp.consensus.filtered.dirPath <- file.path(tmp.consensus.dirPath,
-                                                gsub("_globalNet_", "_consensusNet", basename(scaleNetDir.filtered.freq)))
+                                                gsub("_globalNet_", "_consensusNet", basename(workspaceDir.filtered.freq)))
     if(!dir.exists(tmp.consensus.filtered.dirPath)){dir.create(tmp.consensus.filtered.dirPath)}
 
     # Prepare a rank list, an orientation list and a totalNbrEdges list
@@ -75,7 +120,7 @@ SCS <- function( scaleNetDir, argInData,
     # strMeth <- argReconsMeth[1]
     for(strMeth in argReconsMeth){
 
-      tmp.recons.summary.filePath <- file.path(scaleNetDir.filtered.freq,
+      tmp.recons.summary.filePath <- file.path(workspaceDir.filtered.freq,
                                                gsub(".txt", paste(".", strMeth, ".txt", sep = ''), edgesList.fileName))
 
       if(file.exists(tmp.recons.summary.filePath)){
@@ -267,4 +312,29 @@ SCS <- function( scaleNetDir, argInData,
 
   }
 
+  # Load each consensus graph in a list, with each element of the list
+  # corresponding to an edge frequency
+  consensusGraph.list <- list()
+
+  # Get the list of directory in the "consensusGraph" subdir
+  tmpDirPath <- list.dirs(path = file.path(workspaceDir, "consensusGraph"),
+                          full.names = TRUE, recursive = FALSE)
+
+  for(dirPath in tmpDirPath){
+
+    # Split to get the frequency
+    tmpSplit <- unlist(strsplit(basename(dirPath), split = "_consensusNetpresFreq"))
+
+    if(file.exists(file.path(dirPath, "edgesList.txt"))){
+      # Insert in the consensus graph list
+      consensusGraph.list[[as.character(tmpSplit[2])]] <- read.table(file = file.path(dirPath, "edgesList.txt"),
+                                                                     header = TRUE, row.names = 1, as.is = TRUE)
+    } else {stop("# --Err-- 1001")}
+
+  }
+
+  if(clean.workspace == TRUE){unlink(workspaceDir, recursive = TRUE, force = FALSE)}
+
+  return(consensusGraph.list)
 }
+

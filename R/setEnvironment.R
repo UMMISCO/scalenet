@@ -21,10 +21,26 @@
 #' @param verbose display details
 #' @param ioSubEnv a global environment variable
 
+# Error code from 1,000 to 1,099
 
 setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
                            reconsMeth, reconsParam, presFreqThresh, nbSamples,
                            numSeed, nbCPU, verbose, ioSubEnv){
+
+  # Check some input arguments
+  if(is.null(inData)){stop("# --Err-- 1000")}
+  if(is.null(outDir)){stop("# --Err-- 1001")}
+  if(is.null(eigenPerc)){eigenPerc <- -1}
+  if(is.null(varPerc)){stop("# --Err-- 1002")}
+  if(is.null(subsetType)){subsetType <- "spectral"}
+  if(is.null(reconsMeth)){stop("# --Err-- 1003")}
+  if(is.null(reconsParam)){stop("# --Err-- 1004")}
+  if(is.null(presFreqThresh)){presFreqThresh <- c(0.5, 1)}
+  if(is.null(nbSamples)){nbSamples <- 50000}
+  if(is.null(numSeed)){numSeed <- 6196}
+  if(is.null(nbCPU)){nbCPU <- 2}
+  if(is.null(verbose)){verbose <- FALSE}
+  if(is.null(ioSubEnv)){stop("# --Err-- 1005")}
 
   ioSubEnv$verbose <- verbose
   ioSubEnv$total.time <- NULL
@@ -65,8 +81,10 @@ setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
   # --> Create the output directory
   ioSubEnv$output.dirPath <- outDir
   if(dir.exists(ioSubEnv$output.dirPath)){
-    print(ioSubEnv$output.dirPath)
-    warning("# --Wlib3-- Output directory path already exists!")
+    if(ioSubEnv$verbose){
+      print(ioSubEnv$output.dirPath)
+      print("# --Wlib3-- Output directory path already exists!")
+    }
   }else{dir.create(ioSubEnv$output.dirPath)}
 
   # --> Percent of vertices per subgraph / of eigen vectors
