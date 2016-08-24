@@ -137,6 +137,14 @@ E(gD)[as.character(edges.ext$from) %--% as.character(edges.ext$to)]$similarity <
 # Edge color
 E(gD)$color <- c("#DC143C","#A6A6A6")[as.factor(factor(sign(E(gD)$eorient), levels=c('-1','1')))]
 
+# fix orientation coding
+# 1 backward
+# 2 forward
+# 3 bidirected (on laisse 0)
+E(gD)$eorient[E(gD)$eorient==1] <- 2
+E(gD)$eorient[E(gD)$eorient==-1] <- 1
+
+
 # #check things out
 # node <- "akker"
 # dataSet[dataSet$node1 == node,]; dataSet[dataSet$node2 == node,]
@@ -167,9 +175,17 @@ l <- layout.fruchterman.reingold(gD)
 # l <- layout.graphopt(gD)
 
 pdf(file=paste("igraph.pdf",sep=""),width = 10,height = 10)
-#pdf(file=paste(fname,"igraph_",upper.fix,"_fix.pdf",sep=""),width = 10,height = 10)
-#plot(gD, vertex.label = NA, vertex.size=log10(V(gD)$size), edge.arrow.size=.4, asp=TRUE, rescale=TRUE, layout=l, edge.arrow.mode = E(gD)$infOrt)
-plot(gD, vertex.label = NA, vertex.size=log10(V(gD)$size), edge.arrow.size=.4, asp=TRUE, rescale=TRUE, layout=l)
+plot(gD,
+     vertex.label = V(gD)$name_long,
+     vertex.size=log10(V(gD)$size)*3,
+     edge.arrow.size=.4,
+     asp=TRUE,
+     rescale=TRUE,
+     layout=l,
+     edge.arrow.mode = E(gD)$eorient,
+     vertex.label.cex = 0.7,
+     vertex.label.dist=0)
+#plot(gD, vertex.label = NA, vertex.size=log10(V(gD)$size), edge.arrow.size=.4, asp=TRUE, rescale=TRUE, layout=l)
 dev.off()
 save(gD, edges, edges.raw, l, file=paste("graph_data.rda",sep=""))
 #save(gD, edges, edges.raw, l, file=paste(fname,"graph_data_",upper.fix,"_fix.rda",sep=""))
