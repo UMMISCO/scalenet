@@ -45,7 +45,7 @@ scalenet <- function(argInData, argOutDir, argEigenPerc = -1, argVarPerc, argSub
                      argReconsMeth = "bayes_hc",
                      argReconsParam = list(bayes_hc = list(score="bde", restart=20)),
                      argPresFreqThresh = c(0.5, 1), argNbSamples = 50000,
-                     argNumSeed = 6196, argNbCPU = 2, argVerbose = FALSE) {
+                     argNumSeed = 6196, argNbCPU = 2, argDiscretize = FALSE, argVerbose = FALSE) {
 
   # ----------------------------------------
   # Initialize the global variables (subEnv variable)
@@ -60,7 +60,7 @@ scalenet <- function(argInData, argOutDir, argEigenPerc = -1, argVarPerc, argSub
                            reconsMeth = argReconsMeth, reconsParam = argReconsParam,
                            presFreqThresh = argPresFreqThresh,
                            nbSamples = argNbSamples, numSeed = argNumSeed, nbCPU = argNbCPU,
-                           verbose = argVerbose, ioSubEnv = subEnv )
+                           disc = argDiscretize, verbose = argVerbose, ioSubEnv = subEnv )
   # -----------------
   #  Recall the main parameters
   # -----------------

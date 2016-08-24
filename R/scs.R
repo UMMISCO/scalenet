@@ -8,7 +8,7 @@
 #' @param argReconsMethInfo list of complementary information on each reconstruction method. The
 #' provided information are: "ort" (the method provides orientation n/y) and edge weight "eweight"
 #' (epresenceScore/ecorr)
-#' @param argReconsParam list specific parameters for each reconstruction method and complementary parameters
+#' @param argEmbReconsParam list specific parameters for each reconstruction method and complementary parameters
 #' specific to scalenet, namely: "nbSamples", "numSeed", "nbCPU", "eigenPerc", "varPerc" and "subsetType"
 #' @param argPresFreqThresh a numeric vector of threshold for the frequency of edges from all subgraphs
 #' @param clean.workspace if FALSE, all output files are kept
@@ -23,19 +23,26 @@
 #      argReconsMeth = c("aracne", "bayes_hc"),
 #      argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"),
 #                               bayes_hc = list(ort = "y", eweight = "ecorr")),
-#      argReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001),
+#      argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001),
 #                              bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
-#      argPresFreqThresh = c(0.3, 0.8), argVerbose = TRUE, clean.workspace = TRUE)
+#      argPresFreqThresh = c(0.3, 0.8), clean.workspace = TRUE, discretize = TRUE, argVerbose = TRUE)
+
+# scs( workspaceDir = "~/Projects/Projects_largeScale/data/clinicalMGS_foldChange/output/clinicalMGS_foldChange_raw_sigNameBigTargets",
+#      argInData = "~/Projects/Projects_largeScale/data/clinicalMGS_foldChange/input/clinicalMGS_foldChange_raw_sigNameBigTargets.txt",
+#      argReconsMeth = c("aracne", "bayes_hc"),
+#      argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
+#      argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001), bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
+#      argPresFreqThresh = c(0.3, 0.8), clean.workspace = TRUE, argDiscretize = TRUE, argVerbose = TRUE)
 
 scs <- function( workspaceDir, argInData,
                  argReconsMeth = c("aracne", "bayes_hc"),
                  argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"),
                                           bayes_hc = list(ort = "y", eweight = "ecorr")),
-                 argReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001),
+                 argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001),
                                        bayes_hc = list(score="bde", restart=21),
                                        varPerc = 0.2),
                  argPresFreqThresh = c(0.5, 1), clean.workspace = TRUE,
-                 argVerbose = FALSE ){
+                 argDiscretize = FALSE, argVerbose = FALSE ){
 
   # Check if the scalenet outputs already exists
   # if not, do scalenet for the method given to scs
@@ -44,7 +51,7 @@ scs <- function( workspaceDir, argInData,
 
     # Check if argRconsParam is given
     # if not, quit...
-    if(is.null(argReconsParam)){stop("# --Err-- 1000")}
+    if(is.null(argEmbReconsParam)){stop("# --Err-- 1000")}
 
     # Loop on the reconstruction methods
     # strMeth = argReconsMeth[1]
@@ -53,15 +60,16 @@ scs <- function( workspaceDir, argInData,
       scalenet( argInData = argInData,
                 argOutDir = workspaceDir,
                 argReconsMeth = strMeth,
-                argReconsParam = argReconsParam[[strMeth]],
+                argReconsParam = argEmbReconsParam[[strMeth]],
                 argPresFreqThresh = argPresFreqThresh,
-                argNbSamples = argReconsParam[["nbSamples"]],
-                argNumSeed = argReconsParam[["numSeed"]],
-                argNbCPU = argReconsParam[["nbCPU"]],
-                argVerbose = argVerbose,
-                argEigenPerc = argReconsParam[["eigenPerc"]],
-                argVarPerc = argReconsParam[["varPerc"]],
-                argSubsetType = argReconsParam[["subsetType"]])
+                argNbSamples = argEmbReconsParam[["nbSamples"]],
+                argNumSeed = argEmbReconsParam[["numSeed"]],
+                argNbCPU = argEmbReconsParam[["nbCPU"]],
+                argEigenPerc = argEmbReconsParam[["eigenPerc"]],
+                argVarPerc = argEmbReconsParam[["varPerc"]],
+                argSubsetType = argEmbReconsParam[["subsetType"]],
+                argDiscretize = argDiscretize,
+                argVerbose = argVerbose)
     }
   }
 

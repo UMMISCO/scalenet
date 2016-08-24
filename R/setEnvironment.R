@@ -25,7 +25,7 @@
 
 setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
                            reconsMeth, reconsParam, presFreqThresh, nbSamples,
-                           numSeed, nbCPU, verbose, ioSubEnv){
+                           numSeed, nbCPU, disc, verbose, ioSubEnv){
 
   # Check some input arguments
   if(is.null(inData)){stop("# --Err-- 1000")}
@@ -60,8 +60,14 @@ setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
                                                          sep = "\t", stringsAsFactors = F, data.table = F,
                                                          showProgress = F))
 
+  # Discretize the data is required
+  if(disc == TRUE){
+    ioSubEnv$allData <- discretize(argInData = ioSubEnv$inputData.filePath, argMaxClusters = 5, argVerbose = verbose)
+  }
+
   #### Make sure all columns are factors, then convert to numeric
   if(!ioSubEnv$mi.estimator %in% c("pearson", "spearman", "kendall")){
+    print(head(ioSubEnv$allData))
     ioSubEnv$allData[, colnames(ioSubEnv$allData)] <- as.data.frame(lapply(ioSubEnv$allData[, colnames(ioSubEnv$allData)] , factor))
   }
   ioSubEnv$allData[, colnames(ioSubEnv$allData)] <- as.data.frame(lapply(ioSubEnv$allData[, colnames(ioSubEnv$allData)] , as.numeric))

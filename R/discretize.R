@@ -62,19 +62,19 @@ discretize <- function(argInData, argMaxClusters = 5, argVerbose = FALSE){
 
       # If only one or two non NA, set to 1 and go next
       if(length(myCont.values.notNa.idx) < 3){
-        data.disc[myCont.values.notNa.idx, strNumVar] <- 1
+        myData.disc[myCont.values.notNa.idx, strNumVar] <- 1
         next
       }
     }
-    
+
     # Check if the variable is not a constant
     if(length(unique(myCont.values[myCont.values.notNa.idx])) ==  1){
-      
+
       # If yes, set to 1 and go next
-      data.disc[myCont.values.notNa.idx, strNumVar] <- 1
+      myData.disc[myCont.values.notNa.idx, strNumVar] <- 1
       next
     }
-    
+
 
     # Identify the outliers
     # ----
@@ -355,6 +355,8 @@ discretize <- function(argInData, argMaxClusters = 5, argVerbose = FALSE){
   # - without rownames
   write.table(myData.disc, file=paste(argInData, "disc_noRowNames.txt", sep = "_"),
               col.names = TRUE, row.names = FALSE, quote = FALSE, sep = '\t')
+
+  return(myData.disc)
 
 }
 

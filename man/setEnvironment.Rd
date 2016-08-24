@@ -5,7 +5,8 @@
 \title{setEnvironment}
 \usage{
 setEnvironment(inData, outDir, eigenPerc, varPerc, subsetType, reconsMeth,
-  reconsParam, presFreqThresh, nbSamples, numSeed, nbCPU, verbose, ioSubEnv)
+  reconsParam, presFreqThresh, nbSamples, numSeed, nbCPU, disc, verbose,
+  ioSubEnv)
 }
 \arguments{
 \item{inData}{input data file, a tab separated file with features in columns and observations in rows}

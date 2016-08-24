@@ -7,10 +7,10 @@
 scs(workspaceDir, argInData, argReconsMeth = c("aracne", "bayes_hc"),
   argReconsMethInfo = list(aracne = list(ort = "n", eweight =
   "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
-  argReconsParam = list(aracne = list(estimator = "mi.mm", epsilon = 0.001),
-  bayes_hc = list(score = "bde", restart = 21), varPerc = 0.2),
+  argEmbReconsParam = list(aracne = list(estimator = "mi.mm", epsilon =
+  0.001), bayes_hc = list(score = "bde", restart = 21), varPerc = 0.2),
   argPresFreqThresh = c(0.5, 1), clean.workspace = TRUE,
-  argVerbose = FALSE)
+  argDiscretize = FALSE, argVerbose = FALSE)
 }
 \arguments{
 \item{workspaceDir}{output directory file path (to be created)}
@@ -23,7 +23,7 @@ scs(workspaceDir, argInData, argReconsMeth = c("aracne", "bayes_hc"),
 provided information are: "ort" (the method provides orientation n/y) and edge weight "eweight"
 (epresenceScore/ecorr)}
 
-\item{argReconsParam}{list specific parameters for each reconstruction method and complementary parameters
+\item{argEmbReconsParam}{list specific parameters for each reconstruction method and complementary parameters
 specific to scalenet, namely: "nbSamples", "numSeed", "nbCPU", "eigenPerc", "varPerc" and "subsetType"}
 
 \item{argPresFreqThresh}{a numeric vector of threshold for the frequency of edges from all subgraphs}
