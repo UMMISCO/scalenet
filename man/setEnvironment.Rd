@@ -9,7 +9,7 @@ setEnvironment(inData, outDir, eigenPerc, varPerc, subsetType, reconsMeth,
   ioSubEnv)
 }
 \arguments{
-\item{inData}{input data file, a tab separated file with features in columns and observations in rows}
+\item{inData}{input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows}
 
 \item{outDir}{output directory file, will be created}
 

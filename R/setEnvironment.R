@@ -2,7 +2,7 @@
 #'
 #' setEnvironment sets all required information in en env() variables for reconstruction
 #'
-#' @param inData input data file, a tab separated file with features in columns and observations in rows
+#' @param inData input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows
 #' @param outDir output directory file, will be created
 #' @param eigenPerc percentage of eigen vectors to use,
 #' if -1 this percentage is set with an internal elbow-like heuristic method
@@ -53,21 +53,35 @@ setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
   ioSubEnv$similarityType <- "Lrw"
 
   # --> input data file / output directory path / input data
-  ioSubEnv$inputData.filePath <- inData
-  if(!file.exists(ioSubEnv$inputData.filePath)){stop("# --Eslib2-- Input file does not exist!")}
-  cat("# Loading data:", basename(ioSubEnv$inputData.filePath), "...\n")
-  ioSubEnv$allData <- suppressWarnings(data.table::fread(input = ioSubEnv$inputData.filePath, header = T,
-                                                         sep = "\t", stringsAsFactors = F, data.table = F,
-                                                         showProgress = F))
+  ioSubEnv$inputData.filePath <- NULL
+  ioSubEnv$allData <- NULL
+  if(class(inData) == "character"){
+
+    ioSubEnv$inputData.filePath <- inData
+    if(!file.exists(ioSubEnv$inputData.filePath)){stop("# --Err-- 1007")}
+    cat("# Loading data:", basename(ioSubEnv$inputData.filePath), "...\n")
+    ioSubEnv$allData <- suppressWarnings(data.table::fread(input = ioSubEnv$inputData.filePath, header = T,
+                                                           sep = "\t", stringsAsFactors = F, data.table = F,
+                                                           showProgress = F))
+  } else if(class(inData) == "data.frame") {
+
+    cat("# Loading data...\n")
+    ioSubEnv$allData <- inData
+
+  } else { stop("# --Err-- 1006") }
 
   # Discretize the data is required
   if(disc == TRUE){
-    ioSubEnv$allData <- discretize(argInData = ioSubEnv$inputData.filePath, argMaxClusters = 5, argVerbose = verbose)
+    if(class(inData) == "character"){
+      ioSubEnv$allData <- discretize(argInData = ioSubEnv$inputData.filePath, argMaxClusters = 5, argVerbose = verbose)
+    } else if(class(inData) == "data.frame"){
+      ioSubEnv$allData <- discretize(argInData = ioSubEnv$allData, argMaxClusters = 5, argVerbose = verbose)
+    }
   }
 
   #### Make sure all columns are factors, then convert to numeric
   if(!ioSubEnv$mi.estimator %in% c("pearson", "spearman", "kendall")){
-    print(head(ioSubEnv$allData))
+    # print(head(ioSubEnv$allData))
     ioSubEnv$allData[, colnames(ioSubEnv$allData)] <- as.data.frame(lapply(ioSubEnv$allData[, colnames(ioSubEnv$allData)] , factor))
   }
   ioSubEnv$allData[, colnames(ioSubEnv$allData)] <- as.data.frame(lapply(ioSubEnv$allData[, colnames(ioSubEnv$allData)] , as.numeric))

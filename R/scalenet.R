@@ -4,7 +4,7 @@
 #' with different clustering methods. The default subset selection correspond to the core
 #' scaleNet approach. The other subset selection methods are left for comparison.
 #'
-#' @param argInData input data file, a tab separated file with features in columns and observations in rows
+#' @param argInData input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows
 #' @param argOutDir output directory file, will be created
 #' @param argEigenPerc percentage of eigen vectors to use,
 #' if -1 this percentage is set with an internal elbow-like heuristic method
@@ -131,6 +131,4 @@ scalenet <- function(argInData, argOutDir, argEigenPerc = -1, argVarPerc, argSub
   for(iVarSpl in seq_len(tmp.nbVarSamples)){
     scaleNet.convertToScaleNetFormat(ioSubEnv = subEnv, iVarSpl = iVarSpl)
   }
-
-
 }

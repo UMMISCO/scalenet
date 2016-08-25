@@ -7,16 +7,22 @@
 
 LaplacianRW <- function(ioSubEnv){
 
-  tmp.inputFileName <- basename(ioSubEnv$inputData.filePath)
-  tmp.path <- gsub(tmp.inputFileName,'', ioSubEnv$inputData.filePath)
-  tmp.path <- file.path(tmp.path, "ScaleNet")
-  if(!dir.exists(tmp.path)){dir.create(tmp.path)}
+  tmp.inputFileName <- NULL; tmp.path <- NULL
+  tmp.path.affinity.mat <- NULL; tmp.path.affinity.mat.time <- NULL
 
-  # MAKE AFFINITY
-  tmp.path.affinity.mat <- file.path(tmp.path, gsub(".txt$", "_affinity.mat.rds", tmp.inputFileName))
-  tmp.path.affinity.mat.time <- file.path(tmp.path, gsub(".txt$", "_affinity.time.rds", tmp.inputFileName))
+  if(!is.null(ioSubEnv$inputData.filePath)){
 
-  if(!file.exists(tmp.path.affinity.mat)){
+    tmp.inputFileName <- basename(ioSubEnv$inputData.filePath)
+    tmp.path <- gsub(tmp.inputFileName,'', ioSubEnv$inputData.filePath)
+    tmp.path <- file.path(tmp.path, "ScaleNet")
+    if(!dir.exists(tmp.path)){dir.create(tmp.path)}
+
+    # MAKE AFFINITY
+    tmp.path.affinity.mat <- file.path(tmp.path, gsub(".txt$", "_affinity.mat.rds", tmp.inputFileName))
+    tmp.path.affinity.mat.time <- file.path(tmp.path, gsub(".txt$", "_affinity.time.rds", tmp.inputFileName))
+  }
+
+  if(!file.exists(ifelse(is.null(tmp.path.affinity.mat), "", tmp.path.affinity.mat))){
 
     # Compute the mutual information matrix if it does no exists yet
     cat("# --> ... the mutual information matrix (", ioSubEnv$mi.estimator, "estimator)\n# ---\n")
@@ -41,9 +47,11 @@ LaplacianRW <- function(ioSubEnv){
     # --!-- Time
     ioSubEnv$affinity.mat.time <- (proc.time() - time.affinity.start)
 
-    # Save the affinity matrix and computation time for futur use
-    saveRDS(ioSubEnv$affinity.mat, tmp.path.affinity.mat)
-    saveRDS(ioSubEnv$affinity.mat.time, tmp.path.affinity.mat.time)
+    if(!is.null(ioSubEnv$inputData.filePath)){
+      # Save the affinity matrix and computation time for futur use
+      saveRDS(ioSubEnv$affinity.mat, tmp.path.affinity.mat)
+      saveRDS(ioSubEnv$affinity.mat.time, tmp.path.affinity.mat.time)
+    }
 
   } else{
 
@@ -63,11 +71,15 @@ LaplacianRW <- function(ioSubEnv){
     cat("# -----------------------------\n")
   }
 
-  # MAKE DECOMPOSE
-  tmp.path.decompose.mat <- file.path(tmp.path, gsub(".txt$", "_decomp.mat.rds", tmp.inputFileName))
-  tmp.path.decompose.mat.time <- file.path(tmp.path, gsub(".txt$", "_decomp.time.rds", tmp.inputFileName))
+  tmp.path.decompose.mat <- NULL; tmp.path.decompose.mat.time <- NULL
 
-  if(!file.exists(tmp.path.decompose.mat)){
+  if(!is.null(ioSubEnv$inputData.filePath)){
+    # MAKE DECOMPOSE
+    tmp.path.decompose.mat <- file.path(tmp.path, gsub(".txt$", "_decomp.mat.rds", tmp.inputFileName))
+    tmp.path.decompose.mat.time <- file.path(tmp.path, gsub(".txt$", "_decomp.time.rds", tmp.inputFileName))
+  }
+
+  if(!file.exists(ifelse(is.null(tmp.path.affinity.mat), "", tmp.path.decompose.mat))){
 
     # --> init the matrice to be decomposed with the similarity matrix
     ioSubEnv$decompose.mat <- ioSubEnv$affinity.mat
@@ -123,9 +135,11 @@ LaplacianRW <- function(ioSubEnv){
       # --!-- Time
       ioSubEnv$decompose.mat.time <- (proc.time() - time.laplacian.start)
 
-      # Save the decompose matrix and computation time for futur use
-      saveRDS(ioSubEnv$decompose.mat, tmp.path.decompose.mat)
-      saveRDS(ioSubEnv$decompose.mat.time, tmp.path.decompose.mat.time)
+      if(!is.null(ioSubEnv$inputData.filePath)){
+        # Save the decompose matrix and computation time for futur use
+        saveRDS(ioSubEnv$decompose.mat, tmp.path.decompose.mat)
+        saveRDS(ioSubEnv$decompose.mat.time, tmp.path.decompose.mat.time)
+      }
 
     }else{cat(stop("# Not implemented yet..."))}
 

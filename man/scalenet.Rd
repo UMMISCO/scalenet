@@ -11,7 +11,7 @@ scalenet(argInData, argOutDir, argEigenPerc = -1, argVarPerc,
   argNbCPU = 2, argDiscretize = FALSE, argVerbose = FALSE)
 }
 \arguments{
-\item{argInData}{input data file, a tab separated file with features in columns and observations in rows}
+\item{argInData}{input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows}
 
 \item{argOutDir}{output directory file, will be created}
 

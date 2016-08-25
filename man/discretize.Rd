@@ -7,7 +7,7 @@
 discretize(argInData, argMaxClusters = 5, argVerbose = FALSE)
 }
 \arguments{
-\item{argInData}{input data file, a tab separated file with features in columns and observations in rows}
+\item{argInData}{input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows}
 
 \item{argMaxClusters, }{the expected maximum number of clusters}
 }

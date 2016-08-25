@@ -8,17 +8,22 @@
 
 computeEigenVectVal <- function(ioSubEnv){
 
-  tmp.inputFileName <- basename(ioSubEnv$inputData.filePath)
-  tmp.path <- gsub(tmp.inputFileName,'', ioSubEnv$inputData.filePath)
-  tmp.path <- file.path(tmp.path, "ScaleNet")
-  if(!dir.exists(tmp.path)){dir.create(tmp.path)}
+  tmp.inputFileName <- NULL; tmp.path <- NULL
+  tmp.path.eigen.vect <- NULL; tmp.path.eigen.values <- NULL; tmp.path.eigen.time <- NULL
 
-  # MAKE EIGEN
-  tmp.path.eigen.vect <- file.path(tmp.path, gsub(".txt$", "_eigenvect.rds", tmp.inputFileName))
-  tmp.path.eigen.values <- file.path(tmp.path, gsub(".txt$", "_eigenval.rds", tmp.inputFileName))
-  tmp.path.eigen.time <- file.path(tmp.path, gsub(".txt$", "_eigen.time.rds", tmp.inputFileName))
+  if(!is.null(ioSubEnv$inputData.filePath)){
+    tmp.inputFileName <- basename(ioSubEnv$inputData.filePath)
+    tmp.path <- gsub(tmp.inputFileName,'', ioSubEnv$inputData.filePath)
+    tmp.path <- file.path(tmp.path, "ScaleNet")
+    if(!dir.exists(tmp.path)){dir.create(tmp.path)}
 
-  if(!file.exists(tmp.path.eigen.vect)){
+    # MAKE EIGEN
+    tmp.path.eigen.vect <- file.path(tmp.path, gsub(".txt$", "_eigenvect.rds", tmp.inputFileName))
+    tmp.path.eigen.values <- file.path(tmp.path, gsub(".txt$", "_eigenval.rds", tmp.inputFileName))
+    tmp.path.eigen.time <- file.path(tmp.path, gsub(".txt$", "_eigen.time.rds", tmp.inputFileName))
+  }
+
+  if(!file.exists(ifelse(is.null(tmp.path.eigen.vect), "", tmp.path.eigen.vect))){
 
     # --!-- Time
     time.eigen.start <- proc.time()
@@ -42,18 +47,21 @@ computeEigenVectVal <- function(ioSubEnv){
     # --!-- Time
     ioSubEnv$eigen.time <- (proc.time() - time.eigen.start)
 
-    # Save the eigen vectors, values and eigen decomposition time
-    saveRDS(ioSubEnv$eigen.vectors, tmp.path.eigen.vect)
-    saveRDS(ioSubEnv$eigen.values, tmp.path.eigen.values)
-    saveRDS(ioSubEnv$eigen.time, tmp.path.eigen.time)
+    if(!is.null(ioSubEnv$inputData.filePath)){
 
-    # Save also the eigenvalues as a table
-    # tmp.dirPath <- gsub(basename(tmp.path), "eigenPlots", tmp.path)
-    tmp.dirPath <- file.path(tmp.path, "eigenPlots")
-    if(!dir.exists(tmp.dirPath)){dir.create(tmp.dirPath)}
-    tmp.out <- file.path( tmp.dirPath, paste(gsub(".txt", '', tmp.inputFileName),
+      # Save the eigen vectors, values and eigen decomposition time
+      saveRDS(ioSubEnv$eigen.vectors, tmp.path.eigen.vect)
+      saveRDS(ioSubEnv$eigen.values, tmp.path.eigen.values)
+      saveRDS(ioSubEnv$eigen.time, tmp.path.eigen.time)
+
+      # Save also the eigenvalues as a table
+      # tmp.dirPath <- gsub(basename(tmp.path), "eigenPlots", tmp.path)
+      tmp.dirPath <- file.path(tmp.path, "eigenPlots")
+      if(!dir.exists(tmp.dirPath)){dir.create(tmp.dirPath)}
+      tmp.out <- file.path( tmp.dirPath, paste(gsub(".txt", '', tmp.inputFileName),
                                              "eigenvalues.txt", sep = '-'))
-    write.table(ioSubEnv$eigen.values, file=tmp.out, col.names = F, row.names = F, sep='\t')
+      write.table(ioSubEnv$eigen.values, file=tmp.out, col.names = F, row.names = F, sep='\t')
+    }
 
   } else {
 

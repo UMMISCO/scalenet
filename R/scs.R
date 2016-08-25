@@ -3,7 +3,7 @@
 #' Create a consensus from scaleNet embedded method results
 #'
 #' @param workspaceDir output directory file path (to be created)
-#' @param argInData input data file, a tab separated file with features in columns and observations in rows
+#' @param argInData input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows
 #' @param argReconsMeth string vector with reconstruction method name
 #' @param argReconsMethInfo list of complementary information on each reconstruction method. The
 #' provided information are: "ort" (the method provides orientation n/y) and edge weight "eweight"
@@ -34,13 +34,29 @@
 #      argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001), bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
 #      argPresFreqThresh = c(0.3, 0.8), clean.workspace = TRUE, argDiscretize = TRUE, argVerbose = TRUE)
 
+# inlineData <- read.table(file="~/Projects/Projects_largeScale/data/clinicalMGS_foldChange/input/clinicalMGS_foldChange_raw_sigNameBigTargets.txt",
+#                          header = TRUE, sep = '\t', as.is = TRUE)
+# scs( workspaceDir = "~/Projects/Projects_largeScale/data/clinicalMGS_foldChange/output/clinicalMGS_foldChange_raw_sigNameBigTargets",
+#      argInData = inlineData,
+#      argReconsMeth = c("aracne", "bayes_hc"),
+#      argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
+#      argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001), bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
+#      argPresFreqThresh = c(0.3, 0.8), clean.workspace = FALSE, argDiscretize = TRUE, argVerbose = FALSE)
+#
+# scs( workspaceDir = "~/Projects/Projects_largeScale/data/clinicalMGS_foldChange/output/clinicalMGS_foldChange_raw_sigNameBigTargets",
+#      argInData = "~/Projects/Projects_largeScale/data/clinicalMGS_foldChange/input/clinicalMGS_foldChange_raw_sigNameBigTargets.txt",
+#      argReconsMeth = c("aracne", "bayes_hc"),
+#      argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
+#      argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001), bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
+#      argPresFreqThresh = c(0.3, 0.8), clean.workspace = FALSE, argDiscretize = TRUE, argVerbose = FALSE)
+
 scs <- function( workspaceDir, argInData,
                  argReconsMeth = c("aracne", "bayes_hc"),
                  argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"),
                                           bayes_hc = list(ort = "y", eweight = "ecorr")),
                  argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001),
-                                       bayes_hc = list(score="bde", restart=21),
-                                       varPerc = 0.2),
+                                          bayes_hc = list(score="bde", restart=21),
+                                          varPerc = 0.2),
                  argPresFreqThresh = c(0.5, 1), clean.workspace = TRUE,
                  argDiscretize = FALSE, argVerbose = FALSE ){
 
@@ -57,10 +73,8 @@ scs <- function( workspaceDir, argInData,
     # strMeth = argReconsMeth[1]
     for(strMeth in argReconsMeth){
 
-      scalenet( argInData = argInData,
-                argOutDir = workspaceDir,
-                argReconsMeth = strMeth,
-                argReconsParam = argEmbReconsParam[[strMeth]],
+      scalenet( argInData = argInData, argOutDir = workspaceDir,
+                argReconsMeth = strMeth, argReconsParam = argEmbReconsParam[[strMeth]],
                 argPresFreqThresh = argPresFreqThresh,
                 argNbSamples = argEmbReconsParam[["nbSamples"]],
                 argNumSeed = argEmbReconsParam[["numSeed"]],
@@ -76,10 +90,20 @@ scs <- function( workspaceDir, argInData,
   # Get all variable names, pairs and make labels for the edgesList/adjMat template files
   # ----------------------------------------------------
   # --> get the properties
-  con <- file(argInData, open = "r")
-  argInData.header <- readLines(con, n=1)
-  close(con)
-  argInData.header <- unlist(strsplit(argInData.header, split = "\t"))
+  argInData.header <- NULL
+  if(class(argInData) == "character"){
+
+    con <- file(argInData, open = "r")
+    argInData.header <- readLines(con, n=1)
+    close(con)
+    argInData.header <- unlist(strsplit(argInData.header, split = "\t"))
+
+  } else if(class(argInData) == "data.frame") {
+
+    argInData.header <- colnames(argInData)
+
+  } else { stop("# --Err-- 1002") }
+
   # --> generare all pairs
   allPairs <- combn(argInData.header, 2)
   allPairs.key <- paste(allPairs[1,], allPairs[2,], sep = "_<<_")
@@ -100,9 +124,11 @@ scs <- function( workspaceDir, argInData,
   if(!dir.exists(tmp.consensus.dirPath)){dir.create(tmp.consensus.dirPath)}
 
   # Create a directory path template to load the network learnt by scalenet
-  workspaceDir.filtered.template <- file.path( workspaceDir, "globalGraph",
-                                          paste(gsub(".txt", "", basename(argInData)),
-                                                "_globalNet_presFreq_XXX_PRESFREQ_XXX", sep = ""))
+  #   workspaceDir.filtered.template <- file.path( workspaceDir, "globalGraph",
+  #                                           paste(gsub(".txt", "", basename(argInData)),
+  #                                                 "_globalNet_presFreq_XXX_PRESFREQ_XXX", sep = ""))
+  workspaceDir.filtered.template <- file.path( workspaceDir, "globalGraph", "globalNet_presFreq_XXX_PRESFREQ_XXX")
+
   # Loop of filtered global subgraphes
   # iPresFreq <- 0.8
   for(iPresFreq in argPresFreqThresh){

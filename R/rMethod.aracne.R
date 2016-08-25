@@ -44,7 +44,6 @@ rMethod.aracne <- function(argInData, argOutDir, argEstimator = "mi.mm", argEpsi
   # ----
 
   #### Compute the MIM
-  print("HERE")
   myMIM <- minet::build.mim( inputData.df, argEstimator )
 
   # Compute the weighted matrix

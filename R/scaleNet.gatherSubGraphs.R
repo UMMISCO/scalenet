@@ -265,10 +265,16 @@ scaleNet.gatherSubGraphs <- function(ioSubEnv, iVarSpl){
   tmp.dirPath <- file.path(ioSubEnv$output.dirPath, "globalGraph")
   if(!dir.exists(tmp.dirPath)){dir.create(tmp.dirPath)}
 
+#   tmp.prefix <- ifelse((ioSubEnv$subset.select == "spectralFuzzyCmeansSample"),
+#                        paste("_globalNet_", iVarSpl, ".txt", sep=''),
+#                        paste("_globalNet", ioSubEnv$recons.method,"txt", sep = '.'))
+#
+#   globalNet.filePath <- file.path(tmp.dirPath, gsub(".txt", tmp.prefix, basename(ioSubEnv$inputData.filePath)))
   tmp.prefix <- ifelse((ioSubEnv$subset.select == "spectralFuzzyCmeansSample"),
-                       paste("_globalNet_", iVarSpl, ".txt", sep=''),
-                       paste("_globalNet", ioSubEnv$recons.method,"txt", sep = '.'))
+                       paste("globalNet_", iVarSpl, ".txt", sep=''),
+                       paste("globalNet", ioSubEnv$recons.method,"txt", sep = '.'))
 
-  globalNet.filePath <- file.path(tmp.dirPath, gsub(".txt", tmp.prefix, basename(ioSubEnv$inputData.filePath)))
+  globalNet.filePath <- file.path(tmp.dirPath, tmp.prefix)
+
   write.table(globalNet, file = globalNet.filePath, col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
 }

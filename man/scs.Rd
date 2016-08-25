@@ -15,7 +15,7 @@ scs(workspaceDir, argInData, argReconsMeth = c("aracne", "bayes_hc"),
 \arguments{
 \item{workspaceDir}{output directory file path (to be created)}
 
-\item{argInData}{input data file, a tab separated file with features in columns and observations in rows}
+\item{argInData}{input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows}
 
 \item{argReconsMeth}{string vector with reconstruction method name}
 

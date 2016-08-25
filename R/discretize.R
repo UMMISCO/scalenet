@@ -6,23 +6,38 @@
 #' the cluster of smallest medoid. If non outlier values are all equal, the values are put in one cluster, and the outlier
 #' values, if any, are put in different clusters.
 #'
-#' @param argInData input data file, a tab separated file with features in columns and observations in rows
+#' @param argInData input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows
 #' @param argMaxClusters, the expected maximum number of clusters
 #'
 #' @export
+
+# Error code from 2,000 to 2,099
 
 # discretize(argInData = "~/Projects/Projects_largeScale/data/microbaria/input/rawData/clin/test_discretize/clin.txt")
 
 discretize <- function(argInData, argMaxClusters = 5, argVerbose = FALSE){
 
-  # Read the data
-  myData <- read.table(file = argInData, header = T, as.is = T, sep = '\t')
+  # Read/load the data
+  myData <- NULL
+  if(class(argInData) == "character"){
+
+    if(!file.exists(argInData)){stop("# --Err-- 1001")}
+    cat("# Loading data:", basename(argInData), "...\n")
+    myData <- suppressWarnings(data.table::fread(input = argInData, header = T,
+                                                           sep = "\t", stringsAsFactors = F, data.table = F,
+                                                           showProgress = F))
+  } else if(class(argInData) == "data.frame") {
+
+    cat("# Loading data...\n")
+    myData <- argInData
+
+  } else { stop("# --Err-- 1006") }
 
   # Set a copy where the discrete values will be stored
   myData.disc <- myData
 
   # Explore data and find numerical features
-  prettyData <- prettyR::describe(myData, num.desc=c("min","mean","median","max","var","sd","valid.n"))
+  prettyData <- prettyR::describe(myData, num.desc=c("min","mean","median","max","var","sd","valid.n"), )
   numeric.colNames <- names(prettyData$Numeric)
 
   # Set the max number of cluster
@@ -35,7 +50,9 @@ discretize <- function(argInData, argMaxClusters = 5, argVerbose = FALSE){
   # Graphical parameters
   iGraphCount <- 1; myCexAxis = 0.5; nbRowGraph = 10; nbColGraph = 9
 
-  pdf(file = paste(argInData, "pdf", sep = "."), paper = "a4", width = 7, height = 25)
+  if(class(argInData) == "character"){
+    pdf(file = paste(argInData, "pdf", sep = "."), paper = "a4", width = 7, height = 25)
+  }
 
   # For each numerical feature
   for(strNumVar in numeric.colNames){
@@ -345,16 +362,20 @@ discretize <- function(argInData, argMaxClusters = 5, argVerbose = FALSE){
     }
     # ----
   }
-  dev.off()
+
+  if(class(argInData) == "character"){dev.off()}
 
   # -- Make sure all columns are set to factor
   myData.disc[, colnames(myData.disc)] <- lapply(myData.disc[, colnames(myData.disc)], as.factor)
-  # - with rownames
-  write.table(myData.disc, file=paste(argInData, "disc.txt", sep = "_"),
-              col.names = TRUE, row.names = TRUE, quote = FALSE, sep = '\t')
-  # - without rownames
-  write.table(myData.disc, file=paste(argInData, "disc_noRowNames.txt", sep = "_"),
-              col.names = TRUE, row.names = FALSE, quote = FALSE, sep = '\t')
+
+  if(class(argInData) == "character"){
+    # - with rownames
+    write.table(myData.disc, file=paste(argInData, "disc.txt", sep = "_"),
+                col.names = TRUE, row.names = TRUE, quote = FALSE, sep = '\t')
+    # - without rownames
+    write.table(myData.disc, file=paste(argInData, "disc_noRowNames.txt", sep = "_"),
+                col.names = TRUE, row.names = FALSE, quote = FALSE, sep = '\t')
+  }
 
   return(myData.disc)
 

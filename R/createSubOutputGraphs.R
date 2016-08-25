@@ -42,8 +42,9 @@ createSubOutputGraphs <- function( ioSubEnv ){
     cmd.all <- c(gsub("XXX_SIGN_XXX", "pos", cmd.iEigen.paste), gsub("XXX_SIGN_XXX", "neg", cmd.iEigen.paste))
 
     # Call the command in parallel
-    doParallel::registerDoParallel(cores = ioSubEnv$nbCPU)
-    tmpOut <- foreach(i=1:length(cmd.all)) %dopar%{ eval(parse(text = cmd.all[i])) }
+#     doParallel::registerDoParallel(cores = ioSubEnv$nbCPU)
+#     tmpOut <- foreach(i=1:length(cmd.all)) %dopar%{ eval(parse(text = cmd.all[i])) }
+    for(i in 1:length(cmd.all)) { eval(parse(text = cmd.all[i])) }
 
   } else if(ioSubEnv$subset.select %in% c("spectralKmeans", "spectralFuzzyCmeansOrder",
                                           "spectralFuzzyCmeansSample", "spectralBipartition")){

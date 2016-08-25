@@ -10,11 +10,11 @@
 #'
 #' @export
 
-# rMethod.hc(argInData = "~/Projects/Projects_largeScale/data/benchmark/andes/output/test_pck/subGraphs/subInput/eigenVector2_45neg.tsv",
-#          argOutDir = "~/Projects/Projects_largeScale/data/benchmark/andes/output/test_pck/subGraphs/subOutput",
+# rMethod.hc(argInData = "~/Projects/Projects_largeScale/data/clinicalMGS_foldChange/output/clinicalMGS_foldChange_raw_sigNameBigTargets/subGraphs/subInput/eigenVector5_34pos.tsv",
+#          argOutDir = "~/Projects/Projects_largeScale/data/clinicalMGS_foldChange/output/clinicalMGS_foldChange_raw_sigNameBigTargets/subGraphs/subOutput/eigenVector5_34pos",
 #          argScore = "bde", argRestart = 20, argVerbose = TRUE)
 
-rMethod.hc <- function(argInData, argOutDir, argScore = "bde", argRestart = 20, argVerbose = FALSE) {
+rMethod.hc <- function(argInData, argOutDir, argScore = "bde", argRestart = 20, argVerbose = FALSE, maxIter = 10000) {
 
   if(argVerbose){cat( "# --------\n# -> START Bayes HC...\n" )}
 
@@ -32,9 +32,14 @@ rMethod.hc <- function(argInData, argOutDir, argScore = "bde", argRestart = 20, 
 
   head(inputData.df)
 
-  #### Remove NA values if any
+  #### Remove columns with more than 80% NA
+  tmp.col.idx <- which(unlist(apply(inputData.df, 2, function(x){ length(which(is.na(x))) }))/nrow(inputData.df) > 0.75)
+  if(length(tmp.col.idx)>0){inputData.df <- inputData.df[,-tmp.col.idx]}
+
+  #### Keep only complet cases
   naRows <- unique(which(is.na(inputData.df), arr.ind = T)[,1])
   if( length(naRows) > 0 ){ inputData.df <- inputData.df[-naRows,] }
+inputData.df
 
   # Make sure all columns are factors
   inputData.df[, colnames(inputData.df)] <- as.data.frame(lapply(inputData.df[, colnames(inputData.df)] , factor))
@@ -61,12 +66,12 @@ rMethod.hc <- function(argInData, argOutDir, argScore = "bde", argRestart = 20, 
   if( length( varWithSingleLevel ) > 0 )
   {
     myNet = bnlearn::hc( inputData.df[, -varWithSingleLevel], score = argScore,
-                         restart =  argRestart, debug = FALSE )
+                         restart =  argRestart, debug = FALSE, max.iter = maxIter )
 
     if(argVerbose){cat("# ------| Properties with less than 2 levels: ", paste( tmp.allProperties[varWithSingleLevel], collapse = "," ), "\n" )}
     tmp.allProperties = tmp.allProperties[-varWithSingleLevel]
   } else {
-    myNet = bnlearn::hc( inputData.df, score = argScore, restart =  argRestart, debug = FALSE )
+    myNet = bnlearn::hc( inputData.df, score = argScore, restart =  argRestart, debug = FALSE, max.iter = maxIter )
   }
   rm(tmp.allProperties)
 

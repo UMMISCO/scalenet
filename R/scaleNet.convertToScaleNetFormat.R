@@ -15,10 +15,14 @@ scaleNet.convertToScaleNetFormat <- function(ioSubEnv, iVarSpl){
   if(!dir.exists(tmp.dirPath)){stop("# Not global network found!")}
 
   # iVarSpl = 1
+#   tmp.prefix <- ifelse((ioSubEnv$subset.select == "spectralFuzzyCmeansSample"),
+#                        paste("_globalNet_", iVarSpl, ".txt", sep=''),
+#                        paste("_globalNet", ioSubEnv$recons.method,"txt", sep = '.'))
+#   globalNet.filePath <- file.path(tmp.dirPath, gsub(".txt", tmp.prefix, basename(ioSubEnv$inputData.filePath)))
   tmp.prefix <- ifelse((ioSubEnv$subset.select == "spectralFuzzyCmeansSample"),
-                       paste("_globalNet_", iVarSpl, ".txt", sep=''),
-                       paste("_globalNet", ioSubEnv$recons.method,"txt", sep = '.'))
-  globalNet.filePath <- file.path(tmp.dirPath, gsub(".txt", tmp.prefix, basename(ioSubEnv$inputData.filePath)))
+                       paste("globalNet_", iVarSpl, ".txt", sep=''),
+                       paste("globalNet", ioSubEnv$recons.method,"txt", sep = '.'))
+  globalNet.filePath <- file.path(tmp.dirPath, tmp.prefix)
   globalNet <- suppressWarnings(data.table::fread(input = globalNet.filePath, header = T, sep = "\t",
                                                   stringsAsFactors = F, data.table = F, showProgress = F))
   rownames(globalNet) <- paste(globalNet[,1], globalNet[,2], sep = "_<<_")
