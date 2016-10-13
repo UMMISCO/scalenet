@@ -397,7 +397,6 @@ discretize <- function(argInData, argDisc = "pamk", argBins = 5,
   }
 
   return(myData.disc)
-
 }
 
 
