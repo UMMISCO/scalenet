@@ -17,6 +17,7 @@
 #' @export
 
 # Error code from 10,000 to 10,099
+# ------
 
 # scs( workspaceDir = "~/Projects/Projects_largeScale/data/benchmark/andes/output/test_pck_spectral",
 #      argInData = "~/Projects/Projects_largeScale/data/benchmark/andes/input/rawData/andes_20000/andes_20000_0001.txt",
