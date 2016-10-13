@@ -1,0 +1,17 @@
+{
+    "contents" : "#' createSubInputData.spectralBipartition\n#'\n#' Create input sub datasets : spectral bi partitionning\n#'\n#' @param outDirPath output directory path where all ScaleNet outputs are saved\n#' @param ioSubEnv a global environment variable\n\ncreateSubInputData.spectralBipartition <- function( ioSubEnv, outDirPath ){\n\n  # Consider the variables with deg>0\n  # Set a cluster vector with all the variables in the cluster 1\n  ioSubEnv$specBi.allClusters <- rep(1, ncol(ioSubEnv$affinity.mat))\n  names(ioSubEnv$specBi.allClusters) <- colnames(ioSubEnv$affinity.mat)\n  ioSubEnv$specBi.nextCluster <- 1\n\n  # Make a recursive bi partitionning by splitting each sorted 2nd eigenvector in 2\n  scaleNet.spectralBipartition(ioSubEnv = ioSubEnv, sub.varNames = names(ioSubEnv$specBi.allClusters))\n  tmp.specBi.allClusterLabels <- unique(ioSubEnv$specBi.allClusters)\n  # tmp.specBi.allClusterLabels\n\n  # iClust = 7\n  doParallel::registerDoParallel(cores = ioSubEnv$nbCPU)\n  tmpOut <- foreach(iClust=tmp.specBi.allClusterLabels) %dopar%{\n    print(iClust)\n    # Keep the partition variables\n    tmp.elts <- ioSubEnv$specBi.allClusters[which(ioSubEnv$specBi.allClusters==iClust)]\n\n    # Get the Gclust,m sub dataset, ie. with the ~m variables corresponding to the m clustered variables\n    # --!!--> make sure the pairs of variables are in the same order as in the original dataset (splData)\n    subInData <- file.path(outDirPath, \"subInput\", paste(\"spectralBipartition\", iClust, \"_\", ioSubEnv$subset.m,\".tsv\", sep=''))\n\n    # tmp.elts <- res.pamk$pamobject$clustering[res.pamk$pamobject$clustering==iClust]\n    write.table(ioSubEnv$allData[, colnames(ioSubEnv$allData)[which(colnames(ioSubEnv$allData) %in% names(tmp.elts))], drop = FALSE],\n                file = subInData, col.names = TRUE, row.names = FALSE, quote = FALSE, sep=\"\\t\")\n  }\n\n}\n",
+    "created" : 1470648653312.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1333446170",
+    "id" : "861B947A",
+    "lastKnownWriteTime" : 1469390464,
+    "path" : "~/Projects/Projects_largeScale/package/ScaleNet_V1.2/R/createSubInputData.spectralBipartition.R",
+    "project_path" : "R/createSubInputData.spectralBipartition.R",
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
