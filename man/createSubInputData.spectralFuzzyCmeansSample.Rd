@@ -17,4 +17,3 @@ Create input sub datasets : spectral fuzzy cmeans (sample)
 - assign each variable to a cluster based on its membership
 (use 'sample' based on the membership as probabilities and perform 20 assignments)
 }
-

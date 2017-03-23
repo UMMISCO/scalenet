@@ -57,21 +57,26 @@ discretize <- function(argInData, argDisc = "pamk", argBins = 5,
       # myOutlier.k = 3   # extreme-outlier
 
       # Graphical parameters
-      iGraphCount <- 1; myCexAxis = 0.5; nbRowGraph = 10; nbColGraph = 9
+      # iGraphCount <- 1; myCexAxis = 0.5; nbRowGraph = 10; nbColGraph = 9
 
       # if(class(argInData) == "character"){
       #   pdf(file = paste(argInData, "pdf", sep = "."), paper = "a4", width = 7, height = 25)
       # }
 
       # For each numerical feature
+      counter = 0
       for(strNumVar in numeric.colNames){
+
+        counter = counter + 1
 
         # Load the continuous data
         myVar <- strNumVar
         myCont.values <- myData[, myVar]
         if(argVerbose){
-          cat("# ------------------------------------\n# --> var:", myVar, "\n# ------------------------------------\n")
-          print(myCont.values)
+          cat("# ------------------------------------\n")
+          cat("# --> counter:", counter, "--> var:", myVar,"\n")
+          cat("# ------------------------------------\n")
+          print(str(myCont.values))
           cat("# ------------------------------------\n")
         }
 

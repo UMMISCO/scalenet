@@ -17,14 +17,17 @@ setEnvironment(inData, outDir, eigenPerc, varPerc, subsetType, reconsMeth,
 if -1 this percentage is set with an internal elbow-like heuristic method}
 
 \item{subsetType}{variable subset selection, subset of variables can be selected from:
-(1) eigen vector elements ("spectral"), (2) spectral k-means clusters ("spectralKmeans"),
+(1) eigen vector elements ("spectral"),
+(2) spectral k-means clusters ("spectralKmeans"),
 (3) spectral fuzzy c-means clusters ("spectralFuzzyCmeansOrder" or "spectralFuzzyCmeansSample")
 (4) spectral bipartition clusters ("spectralBipartition" )}
 
-\item{reconsMeth}{reconstruction method, (1) bayesian hill climbing ("bayes_hc"),
+\item{reconsMeth}{reconstruction method,
+(1) bayesian hill climbing ("bayes_hc"),
 (2) aracne ("aracne")}
 
-\item{reconsParam}{reconstruction method parameters, (1) [bayes_hc] "-s score -r restartNumber",
+\item{reconsParam}{reconstruction method parameters,
+(1) [bayes_hc] "-s score -r restartNumber",
 (2) [aracne] "-p epsilon -w estimator"}
 
 \item{nbSamples}{number of observation to sample from the original dataset, if more than the
@@ -41,4 +44,3 @@ original number of observations, the maximum number of available samples is cons
 \description{
 setEnvironment sets all required information in en env() variables for reconstruction
 }
-

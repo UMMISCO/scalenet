@@ -13,4 +13,3 @@ LaplacianRW(ioSubEnv)
 LaplacianRW computes the LAPLACIAN MATRIX, Lrw=D^-1.L=I-D^-1.W, where W is the
 mutual information matrix, D=diag(di) and di=sum(Coli)
 }
-

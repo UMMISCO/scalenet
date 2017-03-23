@@ -14,4 +14,3 @@ computeEigenVectVal computes the eigen vectors and eigen values from the laplaci
 Only a percentage of eigen vectors is kepts (either following input arguments or automatically
 with an elbow-like heuristic)
 }
-

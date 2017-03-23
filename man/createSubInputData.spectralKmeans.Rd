@@ -14,4 +14,3 @@ createSubInputData.spectralKmeans(ioSubEnv, outDirPath)
 \description{
 Create input sub datasets : spectral K-means
 }
-

@@ -43,4 +43,3 @@ scalenet reconstruct network from local prediction based on subset of variables 
 with different clustering methods. The default subset selection correspond to the core
 scaleNet approach. The other subset selection methods are left for comparison.
 }
-

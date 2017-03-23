@@ -35,4 +35,3 @@ specific to scalenet, namely: "nbSamples", "numSeed", "nbCPU", "eigenPerc", "var
 \description{
 Create a consensus from scaleNet embedded method results
 }
-

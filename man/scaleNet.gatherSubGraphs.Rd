@@ -14,4 +14,3 @@ Gather the sub graphs
 - if the input datasets are based on spectralFuzzyCmeansSample
 - save a globalNet for each assignment (up to ioSubEnv$nbVarSample)
 }
-

@@ -21,4 +21,3 @@ rMethod.hc(argInData, argOutDir, argScore = "bde", argRestart = 20,
 \description{
 rMethod.hc reconstruct network using the hhill climbing approach (from bnlearn package)
 }
-

@@ -14,4 +14,3 @@ createSubInputData.spectral(ioSubEnv, outDirPath)
 \description{
 Create input sub datasets : spectral
 }
-

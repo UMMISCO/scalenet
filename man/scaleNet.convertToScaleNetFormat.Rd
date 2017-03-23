@@ -12,4 +12,3 @@ scaleNet.convertToScaleNetFormat(ioSubEnv, iVarSpl)
 \description{
 Convert into a scaleNet edgeList
 }
-

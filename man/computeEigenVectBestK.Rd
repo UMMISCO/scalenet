@@ -12,4 +12,3 @@ computeEigenVectBestK(ioSubEnv)
 \description{
 Compute the best number of eigen vectors using a two regression fit
 }
-

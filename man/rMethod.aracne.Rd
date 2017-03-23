@@ -21,4 +21,3 @@ rMethod.aracne(argInData, argOutDir, argEstimator = "mi.mm", argEpsilon = 0,
 \description{
 rMethod.aracne reconstruct network using the aracne approach (from minet package)
 }
-

@@ -14,4 +14,3 @@ createSubInputData.spectralBipartition(ioSubEnv, outDirPath)
 \description{
 Create input sub datasets : spectral bi partitionning
 }
-

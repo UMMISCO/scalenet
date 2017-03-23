@@ -16,4 +16,3 @@ Create input sub datasets : spectral fuzzy cmeans (order)
 - make 2*subset.k fuzzy clusters
 - for each fuzzy cluster, keep only the m variables with the strongest membership
 }
-

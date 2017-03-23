@@ -4,12 +4,17 @@
 \alias{discretize}
 \title{discretize}
 \usage{
-discretize(argInData, argMaxClusters = 5, argVerbose = FALSE)
+discretize(argInData, argDisc = "pamk", argBins = 5, argMaxClusters = 5,
+  argVerbose = FALSE)
 }
 \arguments{
 \item{argInData}{input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows}
 
-\item{argMaxClusters, }{the expected maximum number of clusters}
+\item{argDisc, }{the discretizing method, "pamk", "equalfreq" or "equalwidth"; default is "pamk"}
+
+\item{argBins, }{the required number of bins (used with "equalfreq" or "equalwidth"; default is 5)}
+
+\item{argMaxClusters, }{the expected maximum number of clusters (only used with the "pamk" method)}
 }
 \description{
 discretize discretizes numerical column of a data.frame. The data.frame can contain NA values.
@@ -18,4 +23,3 @@ Upper outlier values are inserted in the cluster with the largest medoid, and lo
 the cluster of smallest medoid. If non outlier values are all equal, the values are put in one cluster, and the outlier
 values, if any, are put in different clusters.
 }
-

@@ -64,7 +64,8 @@ scs <- function( workspaceDir, argInData,
   # Check if the scalenet outputs already exists
   # if not, do scalenet for the method given to scs
   # ----------------------------------------------------
-  if(!file.exists(workspaceDir)){
+  #if(!file.exists(workspaceDir)){
+  if(!file.exists(paste(workspaceDir,"globalGraph",sep=""))){
 
     # Check if argRconsParam is given
     # if not, quit...
@@ -74,8 +75,10 @@ scs <- function( workspaceDir, argInData,
     # strMeth = argReconsMeth[1]
     for(strMeth in argReconsMeth){
 
-      scalenet( argInData = argInData, argOutDir = workspaceDir,
-                argReconsMeth = strMeth, argReconsParam = argEmbReconsParam[[strMeth]],
+      scalenet( argInData = argInData,
+                argOutDir = workspaceDir,
+                argReconsMeth = strMeth,
+                argReconsParam = argEmbReconsParam[[strMeth]],
                 argPresFreqThresh = argPresFreqThresh,
                 argNbSamples = argEmbReconsParam[["nbSamples"]],
                 argNumSeed = argEmbReconsParam[["numSeed"]],

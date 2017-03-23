@@ -7,12 +7,15 @@
 #' @param eigenPerc percentage of eigen vectors to use,
 #' if -1 this percentage is set with an internal elbow-like heuristic method
 #' @param subsetType variable subset selection, subset of variables can be selected from:
-#' (1) eigen vector elements ("spectral"), (2) spectral k-means clusters ("spectralKmeans"),
+#' (1) eigen vector elements ("spectral"),
+#' (2) spectral k-means clusters ("spectralKmeans"),
 #' (3) spectral fuzzy c-means clusters ("spectralFuzzyCmeansOrder" or "spectralFuzzyCmeansSample")
 #' (4) spectral bipartition clusters ("spectralBipartition" )
-#' @param reconsMeth reconstruction method, (1) bayesian hill climbing ("bayes_hc"),
+#' @param reconsMeth reconstruction method,
+#' (1) bayesian hill climbing ("bayes_hc"),
 #' (2) aracne ("aracne")
-#' @param reconsParam reconstruction method parameters, (1) [bayes_hc] "-s score -r restartNumber",
+#' @param reconsParam reconstruction method parameters,
+#' (1) [bayes_hc] "-s score -r restartNumber",
 #' (2) [aracne] "-p epsilon -w estimator"
 #' @param nbSamples number of observation to sample from the original dataset, if more than the
 #' original number of observations, the maximum number of available samples is considered
@@ -70,12 +73,14 @@ setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
 
   } else { stop("# --Err-- 1006") }
 
-  # Discretize the data is required
+  # Discretize the data if required
   if(disc == TRUE){
     if(class(inData) == "character"){
-      ioSubEnv$allData <- discretize(argInData = ioSubEnv$inputData.filePath, argMaxClusters = 5, argVerbose = verbose)
+      disc.results <- discretize(argInData = ioSubEnv$inputData.filePath, argMaxClusters = 5, argVerbose = verbose)
+      ioSubEnv$allData <- disc.results$discData # EP fix bug extract discData from discretize
     } else if(class(inData) == "data.frame"){
-      ioSubEnv$allData <- discretize(argInData = ioSubEnv$allData, argMaxClusters = 5, argVerbose = verbose)
+      disc.results <- discretize(argInData = ioSubEnv$allData, argMaxClusters = 5, argVerbose = verbose)
+      ioSubEnv$allData <- disc.results$discData
     }
   }
 

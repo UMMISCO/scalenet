@@ -19,31 +19,35 @@
 library(ScaleNet)
 
 
-scalenet(argInData="/Users/eprifti/Research/workspace_r/scalenet/tests/pop2mat.txt",
-         argOutDir="/Users/eprifti/Research/workspace_r/scalenet/tests/scalent_results",
-         argEigenPerc = -1, argVarPerc=0.05,
-         argSubsetType = "spectral", argReconsMeth = "bayes_hc",
-         argReconsParam = list(bayes_hc = list(score = "bde", restart = 20)),
-         argPresFreqThresh = c(0.5, 1), argNbSamples = 50000, argNumSeed = 6196,
-         argNbCPU = 6, argVerbose = TRUE)
+# scalenet(argInData=pop2mat,
+#          argOutDir="/Users/eprifti/Research/workspace_r/scalenet/tests/scalent_results",
+#          argVarPerc = 0.2, argReconsMeth = "bayes_hc", argReconsParam = list(bayes_hc = list(score="bde", restart=21)),
+#          argSubsetType = "spectral", argPresFreqThresh = c(0.3, 0.8), argVerbose = TRUE)
+#
+# scalenet(argInData=pop2mat,
+#          argOutDir="/Users/eprifti/Research/workspace_r/scalenet/tests/scalent_results",
+#          argVarPerc = 0.2, argReconsMeth = "aracne", argReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001)),
+#          argSubsetType = "spectral", argPresFreqThresh = c(0.3, 0.8), argVerbose = TRUE)
 
+tmp <- scs( workspaceDir = "/Users/eprifti/Research/workspace_r/scalenet/tests/scalent_results",
+     #argInData = "/Users/eprifti/Research/akkersisters/pooled_cohort_baseline_MGS.txt",
+     argInData = "/Users/eprifti/Research/workspace_r/scalenet/tests/pop2mat.txt",
+     argReconsMeth = c("aracne", "bayes_hc"),
+     argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
+     argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001), bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
+     argPresFreqThresh = c(0.3, 0.8), clean.workspace = FALSE, argDiscretize = TRUE, argVerbose = TRUE)
 
-scalenet(argInData="/Users/eprifti/Research/workspace_r/scalenet/tests/pop2mat.txt",
-         argOutDir="/Users/eprifti/Research/workspace_r/scalenet/tests/scalent_results",
-         argEigenPerc = -1, argVarPerc=0.05,
-         argSubsetType = "spectral", argReconsMeth = "aracne",
-         argReconsParam = list(aracne = list(epsilon = 0, estimator = "mi.mm")),
-         argPresFreqThresh = c(0.5, 1), argNbSamples = 50000, argNumSeed = 6196,
-         argNbCPU = 6, argVerbose = TRUE)
-
-SCS(scaleNetDir="/Users/eprifti/Research/workspace_r/scalenet/tests/scalent_results",
-    argInData="/Users/eprifti/Research/workspace_r/scalenet/tests/pop2mat.txt",
-    argReconsMeth = c("aracne", "bayes_hc"),
-    argReconsMethInfo = list(aracne = list(ort = "n", eweight ="epresenceScore"),
-                             bayes_hc = list(ort = "y", eweight = "ecorr")),
-    argReconsParam = NULL,  # TODO appeller juste SCS lui donner tout ce qu'il faut pour appeller chaque méthode
-                            #et faire ensuite le consensus
-    argPresFreqThresh = c(0.5, 1))
+# pop2mat <- read.delim("pop2mat.txt")
+# load("~/Research/akkersisters/pc.bc.dat.big.rda")
+# scs(workspaceDir="~/Research/workspace_r/scalenet/tests/",
+#     argInData = t(pc.bc.dat.big),
+#     argReconsMeth = c("aracne", "bayes_hc"),
+#     argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"),
+#                              bayes_hc = list(ort = "y", eweight = "ecorr")),
+#     argEmbReconsParam = list(aracne = list(estimator = "mi.mm", epsilon = 0.001),
+#                              bayes_hc = list(score = "bde", restart = 21), varPerc = 0.2),
+#     argPresFreqThresh = c(0.5, 1), clean.workspace = FALSE,
+#     argDiscretize = FALSE, argVerbose = TRUE)
 
 
 

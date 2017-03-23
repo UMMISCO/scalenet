@@ -14,4 +14,3 @@ scaleNet.spectralBipartition(ioSubEnv, sub.varNames)
 \description{
 Make clustering using a recursive bi-partitionning approach based on the 2nd eigenvector
 }
-
