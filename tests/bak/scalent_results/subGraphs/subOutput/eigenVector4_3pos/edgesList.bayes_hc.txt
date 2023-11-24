@@ -1,0 +1,4 @@
+x	y	epresenceScore	epresence	eorientScore	eorient	ecorr
+GU:973_<<_GU:6433	GU:973	GU:6433	NA	1	NA	2	NA
+GU:973_<<_GU:916	GU:973	GU:916	NA	1	NA	-2	NA
+GU:6433_<<_GU:916	GU:6433	GU:916	NA	1	NA	-2	NA

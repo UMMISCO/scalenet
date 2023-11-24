@@ -4,11 +4,21 @@
 \alias{scalenet}
 \title{scalenet}
 \usage{
-scalenet(argInData, argOutDir, argEigenPerc = -1, argVarPerc,
-  argSubsetType = "spectral", argReconsMeth = "bayes_hc",
+scalenet(
+  argInData,
+  argOutDir,
+  argEigenPerc = -1,
+  argVarPerc,
+  argSubsetType = "spectral",
+  argReconsMeth = "bayes_hc",
   argReconsParam = list(bayes_hc = list(score = "bde", restart = 20)),
-  argPresFreqThresh = c(0.5, 1), argNbSamples = 50000, argNumSeed = 6196,
-  argNbCPU = 2, argDiscretize = FALSE, argVerbose = FALSE)
+  argPresFreqThresh = c(0.5, 1),
+  argNbSamples = 50000,
+  argNumSeed = 6196,
+  argNbCPU = 2,
+  argDiscretize = FALSE,
+  argVerbose = FALSE
+)
 }
 \arguments{
 \item{argInData}{input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows}

@@ -4,8 +4,14 @@
 \alias{rMethod.hc}
 \title{rMethod.hc}
 \usage{
-rMethod.hc(argInData, argOutDir, argScore = "bde", argRestart = 20,
-  argVerbose = FALSE, maxIter = 10000)
+rMethod.hc(
+  argInData,
+  argOutDir,
+  argScore = "bde",
+  argRestart = 20,
+  argVerbose = FALSE,
+  maxIter = 10000
+)
 }
 \arguments{
 \item{argInData}{input data file, a tab separated file with features in columns and observations in rows}

@@ -1,0 +1,4 @@
+x	y	epresenceScore	epresence	eorientScore	eorient	ecorr
+GU:400_<<_GU:760	GU:400	GU:760	NA	1	NA	2	NA
+GU:400_<<_GU:671	GU:400	GU:671	NA	1	NA	-2	NA
+GU:760_<<_GU:671	GU:760	GU:671	NA	0	NA	0	NA

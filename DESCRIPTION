@@ -1,8 +1,8 @@
-Package: ScaleNet
+Package: scalenet
 Type: Package
 Title: Network reconstruction from high-dimensional data based on spectral decomposition and consensus strategy
-Version: 1.2.1
-Date: 2016-07-08
+Version: 1.2.2
+Date: 2023-11-24
 Author: Severine Affeldt, Edi Prifti
 Maintainer: Severine Affeldt <severine.affeldt@gmail.com>
 Description: The scalenet approach embeds any type of network discovery approach within a spectral framework for large graphical model reconstruction. This package also proposes a consensus method, named Spectral Consensus Strategy, that integrates multiple reconstruction algortihms embedded by scalenet to provide robust predictions.
@@ -15,8 +15,9 @@ Depends: R (>= 2.5.0),
          fpc,
          e1071,
          prettyR
-License: What license is it under?
+License: GPL-3 + file LICENSE
 LazyData: TRUE
-RoxygenNote: 6.0.1
+RoxygenNote: 7.2.3
+Encoding: UTF-8
 Suggests: testthat
 Imports:

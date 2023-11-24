@@ -4,8 +4,13 @@
 \alias{rMethod.aracne}
 \title{rMethod.aracne}
 \usage{
-rMethod.aracne(argInData, argOutDir, argEstimator = "mi.mm", argEpsilon = 0,
-  argVerbose = FALSE)
+rMethod.aracne(
+  argInData,
+  argOutDir,
+  argEstimator = "mi.mm",
+  argEpsilon = 0,
+  argVerbose = FALSE
+)
 }
 \arguments{
 \item{argInData}{input data file, a tab separated file with features in columns and observations in rows}

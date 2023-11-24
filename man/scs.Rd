@@ -4,13 +4,19 @@
 \alias{scs}
 \title{scs}
 \usage{
-scs(workspaceDir, argInData, argReconsMeth = c("aracne", "bayes_hc"),
-  argReconsMethInfo = list(aracne = list(ort = "n", eweight =
-  "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
-  argEmbReconsParam = list(aracne = list(estimator = "mi.mm", epsilon =
-  0.001), bayes_hc = list(score = "bde", restart = 21), varPerc = 0.2),
-  argPresFreqThresh = c(0.5, 1), clean.workspace = TRUE,
-  argDiscretize = FALSE, argVerbose = FALSE)
+scs(
+  workspaceDir,
+  argInData,
+  argReconsMeth = c("aracne", "bayes_hc"),
+  argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"), bayes_hc
+    = list(ort = "y", eweight = "ecorr")),
+  argEmbReconsParam = list(aracne = list(estimator = "mi.mm", epsilon = 0.001), bayes_hc
+    = list(score = "bde", restart = 21), varPerc = 0.2),
+  argPresFreqThresh = c(0.5, 1),
+  clean.workspace = TRUE,
+  argDiscretize = FALSE,
+  argVerbose = FALSE
+)
 }
 \arguments{
 \item{workspaceDir}{output directory file path (to be created)}

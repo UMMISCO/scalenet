@@ -4,8 +4,13 @@
 \alias{discretize}
 \title{discretize}
 \usage{
-discretize(argInData, argDisc = "pamk", argBins = 5, argMaxClusters = 5,
-  argVerbose = FALSE)
+discretize(
+  argInData,
+  argDisc = "pamk",
+  argBins = 5,
+  argMaxClusters = 5,
+  argVerbose = FALSE
+)
 }
 \arguments{
 \item{argInData}{input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows}

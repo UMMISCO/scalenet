@@ -1,0 +1,4 @@
+x	y	epresenceScore	epresence	eorientScore	eorient	ecorr
+GU:1924_<<_GU:166	GU:1924	GU:166	NA	1	NA	-2	NA
+GU:1924_<<_GU:93	GU:1924	GU:93	NA	1	NA	2	NA
+GU:166_<<_GU:93	GU:166	GU:93	NA	1	NA	2	NA

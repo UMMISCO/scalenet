@@ -1,0 +1,4 @@
+x	y	epresenceScore	epresence	eorientScore	eorient	ecorr
+GU:178_<<_GU:1020	GU:178	GU:1020	NA	1	NA	2	NA
+GU:178_<<_GU:6266	GU:178	GU:6266	NA	0	NA	0	NA
+GU:1020_<<_GU:6266	GU:1020	GU:6266	NA	1	NA	-2	NA

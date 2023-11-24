@@ -4,9 +4,22 @@
 \alias{setEnvironment}
 \title{setEnvironment}
 \usage{
-setEnvironment(inData, outDir, eigenPerc, varPerc, subsetType, reconsMeth,
-  reconsParam, presFreqThresh, nbSamples, numSeed, nbCPU, disc, verbose,
-  ioSubEnv)
+setEnvironment(
+  inData,
+  outDir,
+  eigenPerc,
+  varPerc,
+  subsetType,
+  reconsMeth,
+  reconsParam,
+  presFreqThresh,
+  nbSamples,
+  numSeed,
+  nbCPU,
+  disc,
+  verbose,
+  ioSubEnv
+)
 }
 \arguments{
 \item{inData}{input data file path (a tab separated file) or a data.frame, with features in columns and observations in rows}

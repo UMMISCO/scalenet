@@ -1,0 +1,4 @@
+x	y	epresenceScore	epresence	eorientScore	eorient	ecorr
+GU:1671_<<_GU:25	GU:1671	GU:25	0.112492373289377	1	NA	1	NA
+GU:178_<<_GU:1671	GU:178	GU:1671	0.078608402353312	1	NA	1	NA
+GU:178_<<_GU:25	GU:178	GU:25	0	0	NA	0	NA

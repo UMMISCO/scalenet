@@ -1,0 +1,33 @@
+---
+title: "Readme"
+author: "Edi Prifti"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Installation guide
+
+```{r}
+# install the CRAN packages
+install.packages(c("doSNOW", "doParallel", "bnlearn","fpc","e1071","prettyR"), dependencies = TRUE)
+
+# There is a bioconductor package
+
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("minet")
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

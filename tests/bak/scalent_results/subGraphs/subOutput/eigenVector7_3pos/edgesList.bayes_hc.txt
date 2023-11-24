@@ -1,0 +1,4 @@
+x	y	epresenceScore	epresence	eorientScore	eorient	ecorr
+GU:699_<<_GU:2616	GU:699	GU:2616	NA	1	NA	2	NA
+GU:699_<<_GU:805	GU:699	GU:805	NA	1	NA	-2	NA
+GU:2616_<<_GU:805	GU:2616	GU:805	NA	1	NA	-2	NA
