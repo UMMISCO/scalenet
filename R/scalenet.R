@@ -36,8 +36,8 @@
 #          argVarPerc = 0.2, argReconsMeth = "bayes_hc", argReconsParam = list(bayes_hc = list(score="bde", restart=21)),
 #          argSubsetType = "spectral", argPresFreqThresh = c(0.3, 0.8), argVerbose = TRUE)
 
-# scalenet(argInData = "~/Projects/Projects_largeScale/package/ScaleNet_V1.2/tests/pop2mat.txt",
-#          argOutDir = "~/Projects/Projects_largeScale/package/ScaleNet_V1.2/tests/pop2mat",
+# scalenet(argInData = "~/Projects/Projects_largeScale/package/scalenet_V1.2/tests/pop2mat.txt",
+#          argOutDir = "~/Projects/Projects_largeScale/package/scalenet_V1.2/tests/pop2mat",
 #          argVarPerc = 0.2, argReconsMeth = "bayes_hc", argReconsParam = list(bayes_hc = list(score="bde", restart=21)),
 #          argSubsetType = "spectral", argPresFreqThresh = c(0.3, 0.8), argVerbose = TRUE)
 
@@ -129,6 +129,6 @@ scalenet <- function(argInData, argOutDir, argEigenPerc = -1, argVarPerc, argSub
 
   # iVarSpl = 1
   for(iVarSpl in seq_len(tmp.nbVarSamples)){
-    scaleNet.convertToScaleNetFormat(ioSubEnv = subEnv, iVarSpl = iVarSpl)
+    scaleNet.convertToscalenetFormat(ioSubEnv = subEnv, iVarSpl = iVarSpl)
   }
 }

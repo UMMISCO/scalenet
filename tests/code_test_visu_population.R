@@ -13,10 +13,10 @@
 
 
 # Launch network reconstruction
-#install.packages("~/Desktop/scalenet/ScaleNet_V1.2.tar.gz", repos = NULL, type = "source")
+#install.packages("~/Desktop/scalenet/scalenet_V1.2.tar.gz", repos = NULL, type = "source")
 # source("https://bioconductor.org/biocLite.R")
 # biocLite("minet")
-library(ScaleNet)
+library(scalenet)
 
 
 # scalenet(argInData=pop2mat,
@@ -29,9 +29,9 @@ library(ScaleNet)
 #          argVarPerc = 0.2, argReconsMeth = "aracne", argReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001)),
 #          argSubsetType = "spectral", argPresFreqThresh = c(0.3, 0.8), argVerbose = TRUE)
 
-tmp <- scs( workspaceDir = "/Users/eprifti/Research/workspace_r/scalenet/tests/scalent_results",
+tmp <- scs(workspaceDir = "scalent_results",
      #argInData = "/Users/eprifti/Research/akkersisters/pooled_cohort_baseline_MGS.txt",
-     argInData = "/Users/eprifti/Research/workspace_r/scalenet/tests/pop2mat.txt",
+     argInData = "pop2mat.txt",
      argReconsMeth = c("aracne", "bayes_hc"),
      argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
      argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001), bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
@@ -54,7 +54,7 @@ tmp <- scs( workspaceDir = "/Users/eprifti/Research/workspace_r/scalenet/tests/s
 # visualize output
 
 #-------------------------------------------------------------------------------------------
-# 2. ScaleNet NETWORK
+# 2. scalenet NETWORK
 #-------------------------------------------------------------------------------------------
 # flipEdges <- function(var.name = c(node1, node2)){
 #   if(length(var.name)!=2) stop("Two variable names are needed")

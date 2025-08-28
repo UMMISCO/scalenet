@@ -12,7 +12,7 @@ plotSaveEigenVect <- function( ioSubEnv ){
     myVector.idx.list <- split(seq_len(ncol(ioSubEnv$eigen.vectors)),
                                ceiling(seq_along(seq_len(ncol(ioSubEnv$eigen.vectors)))/8))
 
-    tmp.dirPath <- file.path(gsub(basename(ioSubEnv$inputData.filePath), "ScaleNet",
+    tmp.dirPath <- file.path(gsub(basename(ioSubEnv$inputData.filePath), "scalenet",
                                   ioSubEnv$inputData.filePath), "eigenPlots", "eigenVectors")
     if(!dir.exists(tmp.dirPath)){dir.create(tmp.dirPath)}
 

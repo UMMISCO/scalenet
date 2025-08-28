@@ -2,7 +2,7 @@
 #'
 #' Create input sub datasets : spectral bi partitionning
 #'
-#' @param outDirPath output directory path where all ScaleNet outputs are saved
+#' @param outDirPath output directory path where all scalenet outputs are saved
 #' @param ioSubEnv a global environment variable
 
 createSubInputData.spectralBipartition <- function( ioSubEnv, outDirPath ){

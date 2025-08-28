@@ -14,7 +14,7 @@ computeEigenVectVal <- function(ioSubEnv){
   if(!is.null(ioSubEnv$inputData.filePath)){
     tmp.inputFileName <- basename(ioSubEnv$inputData.filePath)
     tmp.path <- gsub(tmp.inputFileName,'', ioSubEnv$inputData.filePath)
-    tmp.path <- file.path(tmp.path, "ScaleNet")
+    tmp.path <- file.path(tmp.path, "scalenet")
     if(!dir.exists(tmp.path)){dir.create(tmp.path)}
 
     # MAKE EIGEN
@@ -75,7 +75,7 @@ computeEigenVectVal <- function(ioSubEnv){
 
   # If no eigen vector percent is given, compute it using the elbow-like heuristic
   if(ioSubEnv$subset.k.perc == -1){
-    ioSubEnv$subset.k.perc <- ScaleNet:::computeEigenVectBestK(ioSubEnv = ioSubEnv)
+    ioSubEnv$subset.k.perc <- scalenet:::computeEigenVectBestK(ioSubEnv = ioSubEnv)
     ioSubEnv$subset.k <- ceiling(ioSubEnv$subset.k.perc*dim(ioSubEnv$allData)[2])
 
     # In case we need FuzzyCmeansOrder, we set the number of clusters

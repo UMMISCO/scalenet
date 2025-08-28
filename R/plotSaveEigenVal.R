@@ -6,7 +6,7 @@
 plotSaveEigenVal <- function( ioSubEnv ){
 
   if(!is.null(ioSubEnv$inputData.filePath)){
-    tmp.dirPath <- gsub(basename(ioSubEnv$inputData.filePath), "ScaleNet",
+    tmp.dirPath <- gsub(basename(ioSubEnv$inputData.filePath), "scalenet",
                         ioSubEnv$inputData.filePath)
     if(!dir.exists(tmp.dirPath)){dir.create(tmp.dirPath)}
 

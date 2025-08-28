@@ -14,7 +14,7 @@ LaplacianRW <- function(ioSubEnv){
 
     tmp.inputFileName <- basename(ioSubEnv$inputData.filePath)
     tmp.path <- gsub(tmp.inputFileName,'', ioSubEnv$inputData.filePath)
-    tmp.path <- file.path(tmp.path, "ScaleNet")
+    tmp.path <- file.path(tmp.path, "scalenet")
     if(!dir.exists(tmp.path)){dir.create(tmp.path)}
 
     # MAKE AFFINITY

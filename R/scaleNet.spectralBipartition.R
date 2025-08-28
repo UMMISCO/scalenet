@@ -2,7 +2,7 @@
 #'
 #' Make clustering using a recursive bi-partitionning approach based on the 2nd eigenvector
 #'
-#' @param outDirPath output directory path where all ScaleNet outputs are saved
+#' @param outDirPath output directory path where all scalenet outputs are saved
 #' @param ioSubEnv a global environment variable
 
 scaleNet.spectralBipartition <- function(ioSubEnv, sub.varNames){

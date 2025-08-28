@@ -1,10 +1,10 @@
-#' scaleNet.convertToScaleNetFormat
+#' scaleNet.convertToscalenetFormat
 #'
 #' Convert into a scaleNet edgeList
 #'
 #' @param ioSubEnv a global environment variable
 
-scaleNet.convertToScaleNetFormat <- function(ioSubEnv, iVarSpl){
+scaleNet.convertToscalenetFormat <- function(ioSubEnv, iVarSpl){
 
   # For all pairs x-y, create a scaleNet key
   # --> get the properties

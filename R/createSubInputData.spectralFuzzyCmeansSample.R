@@ -6,7 +6,7 @@
 #' (use 'sample' based on the membership as probabilities and perform 20 assignments)
 
 #'
-#' @param outDirPath output directory path where all ScaleNet outputs are saved
+#' @param outDirPath output directory path where all scalenet outputs are saved
 #' @param ioSubEnv a global environment variable
 
 createSubInputData.spectralFuzzyCmeansSample <- function( ioSubEnv, outDirPath ){

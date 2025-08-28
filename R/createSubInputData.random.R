@@ -2,7 +2,7 @@
 #'
 #' Create input sub datasets : random
 #'
-#' @param outDirPath output directory path where all ScaleNet outputs are saved
+#' @param outDirPath output directory path where all scalenet outputs are saved
 #' @param ioSubEnv a global environment variable
 
 createSubInputData.random <- function( ioSubEnv, outDirPath ){

@@ -4,7 +4,7 @@
 #' - make 2*subset.k fuzzy clusters
 #' - for each fuzzy cluster, keep only the m variables with the strongest membership
 #'
-#' @param outDirPath output directory path where all ScaleNet outputs are saved
+#' @param outDirPath output directory path where all scalenet outputs are saved
 #' @param ioSubEnv a global environment variable
 
 createSubInputData.spectralFuzzyCmeansOrder <- function( ioSubEnv, outDirPath ){

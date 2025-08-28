@@ -9,7 +9,7 @@ scaleNet.spectralBipartition(ioSubEnv, sub.varNames)
 \arguments{
 \item{ioSubEnv}{a global environment variable}
 
-\item{outDirPath}{output directory path where all ScaleNet outputs are saved}
+\item{outDirPath}{output directory path where all scalenet outputs are saved}
 }
 \description{
 Make clustering using a recursive bi-partitionning approach based on the 2nd eigenvector

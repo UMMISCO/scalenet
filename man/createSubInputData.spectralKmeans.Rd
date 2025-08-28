@@ -9,7 +9,7 @@ createSubInputData.spectralKmeans(ioSubEnv, outDirPath)
 \arguments{
 \item{ioSubEnv}{a global environment variable}
 
-\item{outDirPath}{output directory path where all ScaleNet outputs are saved}
+\item{outDirPath}{output directory path where all scalenet outputs are saved}
 }
 \description{
 Create input sub datasets : spectral K-means
