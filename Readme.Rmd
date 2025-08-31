@@ -13,21 +13,51 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 # install the CRAN packages
-install.packages(c("doSNOW", "doParallel", "bnlearn","fpc","e1071","prettyR"), dependencies = TRUE)
+install.packages(c("doSNOW", "doParallel", "bnlearn","fpc","e1071","prettyR", "graph"), dependencies = TRUE)
 
 # There is a bioconductor package
 
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install("minet")
+BiocManager::install(c("graph", "Rgraphviz", "minet"))
 ```
 
-## Including Plots
+## Load the data
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r warning=FALSE, include=FALSE}
+pop2mat <- read.delim("tests/data/pop2mat.txt")
+
+tmp <- scs(workspaceDir = "scalent_results",
+           #argInData = "/Users/eprifti/Research/akkersisters/pooled_cohort_baseline_MGS.txt",
+           argInData = "tests/data/pop2mat.txt",
+           argReconsMeth = c("aracne", "bayes_hc"),
+           argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
+           argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001), bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
+           argPresFreqThresh = c(0.3, 0.8), clean.workspace = FALSE, argDiscretize = TRUE, argVerbose = TRUE)
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+# node annotation
+load("tests/data/mgs_taxo.rda"); taxo <- mgs_taxo; rm(mgs_taxo)
+size <- as.numeric(as.character(taxo$size)); plot(size)
+
+
+# fname <- "scalent_results/consensusGraph/pop2mat_consensusNetpresFreq1/edgesList.txt"
+fname <- "scalent_results/consensusGraph/globalNet_presFreq0.8/edgesList.txt"
+# upper.perc <- 3
+# upper.fix <- 307
+
+# load the edge information for spectral3off2 network
+edges <- read.delim(fname, as.is = TRUE); dim(edges) # 1183 edges and 7 columns
+edges.raw <- edges # save it
+# remove edges that do not have an orientation
+edges <- edges[!is.na(edges$eorientScore),]; dim(edges) # 193 edges
+colnames(edges)[1:2] <- c("from","to")
+edges$from <- gsub("_",":",edges$from)
+edges$to <- gsub("_",":",edges$to)
+rownames(edges) <- paste(edges$from, edges$to, sep=" => ")
+
+```
+

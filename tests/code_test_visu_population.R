@@ -29,13 +29,16 @@ library(scalenet)
 #          argVarPerc = 0.2, argReconsMeth = "aracne", argReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001)),
 #          argSubsetType = "spectral", argPresFreqThresh = c(0.3, 0.8), argVerbose = TRUE)
 
+pop2mat <- read.delim("tests/data/pop2mat.txt")
+
+
 tmp <- scs(workspaceDir = "scalent_results",
-     #argInData = "/Users/eprifti/Research/akkersisters/pooled_cohort_baseline_MGS.txt",
-     argInData = "pop2mat.txt",
-     argReconsMeth = c("aracne", "bayes_hc"),
-     argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
-     argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001), bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
-     argPresFreqThresh = c(0.3, 0.8), clean.workspace = FALSE, argDiscretize = TRUE, argVerbose = TRUE)
+           #argInData = "/Users/eprifti/Research/akkersisters/pooled_cohort_baseline_MGS.txt",
+           argInData = "tests/data/pop2mat.txt",
+           argReconsMeth = c("aracne", "bayes_hc"),
+           argReconsMethInfo = list(aracne = list(ort = "n", eweight = "epresenceScore"), bayes_hc = list(ort = "y", eweight = "ecorr")),
+           argEmbReconsParam = list(aracne = list(estimator="mi.mm", epsilon=0.001), bayes_hc = list(score="bde", restart=21), varPerc = 0.2),
+           argPresFreqThresh = c(0.3, 0.8), clean.workspace = FALSE, argDiscretize = TRUE, argVerbose = TRUE)
 
 # pop2mat <- read.delim("pop2mat.txt")
 # load("~/Research/akkersisters/pc.bc.dat.big.rda")

@@ -6,7 +6,7 @@ Date: 2025-08-28
 Author: Severine Affeldt, Edi Prifti
 Maintainer: Severine Affeldt <edi.prifti@ird.fr>
 Description: The scalenet approach embeds any type of network discovery approach within a spectral framework for large graphical model reconstruction. This package also proposes a consensus method, named Spectral Consensus Strategy, that integrates multiple reconstruction algortihms embedded by scalenet to provide robust predictions.
-Depends: R (>= 2.5.0),
+Depends: R (>= 4.0.0),
          doSNOW,
          foreach,
          doParallel,
@@ -17,7 +17,7 @@ Depends: R (>= 2.5.0),
          prettyR
 License: GPL-3 + file LICENSE
 LazyData: TRUE
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Encoding: UTF-8
 Suggests: testthat
 Imports:
