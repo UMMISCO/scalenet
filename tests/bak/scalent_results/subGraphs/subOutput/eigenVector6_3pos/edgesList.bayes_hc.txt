@@ -1,4 +1,0 @@
-x	y	epresenceScore	epresence	eorientScore	eorient	ecorr
-GU:93_<<_GU:1722	GU:93	GU:1722	NA	1	NA	2	NA
-GU:93_<<_GU:757	GU:93	GU:757	NA	1	NA	2	NA
-GU:1722_<<_GU:757	GU:1722	GU:757	NA	1	NA	2	NA

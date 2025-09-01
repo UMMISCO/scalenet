@@ -1,4 +1,0 @@
-x	y	epresenceScore	epresence	eorientScore	eorient	ecorr
-GU:92_<<_GU:860	GU:92	GU:860	NA	0	NA	0	NA
-GU:92_<<_GU:6266	GU:92	GU:6266	NA	1	NA	-2	NA
-GU:860_<<_GU:6266	GU:860	GU:6266	NA	0	NA	0	NA

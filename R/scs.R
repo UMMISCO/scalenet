@@ -365,7 +365,9 @@ scs <- function( workspaceDir, argInData,
 
     if(file.exists(file.path(dirPath, "edgesList.txt"))){
       # Insert in the consensus graph list
-      consensusGraph.list[[as.character(tmpSplit[2])]] <- read.table(file = file.path(dirPath, "edgesList.txt"),
+      # consensusGraph.list[[as.character(tmpSplit[2])]] <- read.table(file = file.path(dirPath, "edgesList.txt"),
+      #                                                                header = TRUE, row.names = 1, as.is = TRUE)
+      consensusGraph.list[[as.character(tmpSplit)]] <- read.table(file = file.path(dirPath, "edgesList.txt"),
                                                                      header = TRUE, row.names = 1, as.is = TRUE)
     } else {stop("# --Err-- 1001")}
 
