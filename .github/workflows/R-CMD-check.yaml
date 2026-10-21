@@ -32,6 +32,9 @@ jobs:
           options(warn = 2)                       # a failed install must fail the job
           install.packages(c(
             "BiocManager", "rcmdcheck",
+            # Declared in Suggests. R CMD check treats a missing suggested
+            # package as an ERROR, not a note, so it has to be here.
+            "testthat",
             "doSNOW", "foreach", "doParallel", "bnlearn",
             "fpc", "e1071", "data.table", "infotheo", "plyr"
           ))
