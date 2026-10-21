@@ -21,32 +21,50 @@ jobs:
         with:
           use-public-rspm: true
 
-      # minet and graph are Bioconductor packages, so the Bioconductor repo has
-      # to be on the list before the dependency solver runs.
-      # Two dependencies are not plain CRAN packages:
-      #   * minet lives on Bioconductor, hence extra-repositories;
-      #   * prettyR was ARCHIVED from CRAN, so the solver cannot find it at all
-      #     and installs from the archive tarball instead. That is a workaround,
-      #     not a fix: the package Depends on something CRAN no longer ships.
-      #     It is used in exactly one place, discretize.R:42, and only to list
-      #     which columns are numeric -- replaceable with base R, but that would
-      #     change which columns get discretized, so it is left for a change
-      #     that can be validated on its own.
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: |
-            any::rcmdcheck
-            url::https://cran.r-project.org/src/contrib/Archive/prettyR/prettyR_2.2-3.tar.gz
-          needs: check
-          extra-repositories: https://bioconductor.org/packages/release/bioc
+      # Dependencies are installed explicitly rather than through
+      # setup-r-dependencies, because this package's dependency set defeats
+      # pak's solver: prettyR has been ARCHIVED from CRAN, so the solver stops
+      # at "Can't find package called prettyR" before anything else runs, and
+      # offering the archive tarball alongside does not reconcile with the
+      # dependency by that name. Installing by hand keeps it deterministic.
+      - name: Install dependencies
+        run: |
+          options(warn = 2)                       # a failed install must fail the job
+          install.packages(c(
+            "BiocManager", "rcmdcheck",
+            "doSNOW", "foreach", "doParallel", "bnlearn",
+            "fpc", "e1071", "data.table", "infotheo", "plyr"
+          ))
+          # minet is Bioconductor, not CRAN.
+          BiocManager::install("minet", ask = FALSE, update = FALSE)
+          # prettyR is archived. It is called once, in discretize.R, only to
+          # list which columns are numeric. Base R could do that, but the two
+          # do not classify columns identically, so replacing it would change
+          # which columns get discretized -- a change to validate on its own,
+          # not to slip into a CI commit.
+          install.packages(
+            "https://cran.r-project.org/src/contrib/Archive/prettyR/prettyR_2.2-3.tar.gz",
+            repos = NULL, type = "source"
+          )
+        shell: Rscript {0}
 
-      # Gates on ERRORS only. The package has two warnings that predate this
-      # workflow -- undeclared imports in NAMESPACE, and six Rd files with
-      # undocumented arguments, none of them in the files this branch touches.
-      # Tightening to error-on warning means fixing those first; that is a
-      # packaging change of its own, not something to smuggle in here.
-      - uses: r-lib/actions/check-r-package@v2
+      # Gates on ERRORS only. The package reports two warnings that predate this
+      # workflow: undeclared NAMESPACE imports, and six Rd files with
+      # undocumented arguments -- none of them files this branch touches.
+      # Tightening to warnings means fixing those first, which is a packaging
+      # change of its own.
+      - name: R CMD check
+        run: |
+          res <- rcmdcheck::rcmdcheck(
+            args = c("--no-manual", "--no-build-vignettes"),
+            error_on = "error", check_dir = "check"
+          )
+          cat("\nwarnings:", length(res$warnings), " notes:", length(res$notes), "\n")
+        shell: Rscript {0}
+
+      - name: Upload check results on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
         with:
-          error-on: '"error"'
-          args: 'c("--no-manual", "--no-build-vignettes")'
-          upload-snapshots: true
+          name: R-CMD-check-results
+          path: check
