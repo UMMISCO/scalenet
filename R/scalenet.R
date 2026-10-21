@@ -20,6 +20,24 @@
 #' original number of observations, the maximum number of available samples is considered
 #' @param argNumSeed random seed to sample observations from the original dataset
 #' @param argNbCPU number of CPU to be used for local recontructions
+#' @param argHcOrders number of random variable orderings the Bayesian step fuses per
+#' subgraph (ordering consensus). 1 = a single ordering, which makes the learned
+#' network a function of that arbitrary order, so renaming variables moves arcs.
+#' Ignored by aracne, which is order-invariant already.
+#' @param argHcOrderFreq fraction of those orderings an arc must appear in to be kept
+#'
+#' @details
+#' Hill-climbing restarts and ordering consensus both exist to diversify the greedy
+#' search, so with argHcOrders > 1 the restarts are largely redundant: they add
+#' variation that the consensus never averages away. Measured in the Rust port on
+#' the same data, keeping 21 restarts alongside the orderings lowered reproducibility
+#' and doubled the runtime. Unlike the Rust CLI, this function does not silently
+#' override the restart count you pass -- set restart = 0 in argReconsParam when you
+#' turn ordering consensus on.
+#' @param argLegacyLrw reproduce the pre-fix, column-order-dependent spectral step:
+#' decompose the lower triangle of the asymmetric Lrw (what eigen(symmetric = TRUE)
+#' reads) instead of the symmetric normalised Laplacian. Only for regenerating
+#' results published before the fix; see LaplacianRW.
 #' @param argVerbose display details
 #'
 #' @export
@@ -45,7 +63,10 @@ scalenet <- function(argInData, argOutDir, argEigenPerc = -1, argVarPerc, argSub
                      argReconsMeth = "bayes_hc",
                      argReconsParam = list(bayes_hc = list(score="bde", restart=20)),
                      argPresFreqThresh = c(0.5, 1), argNbSamples = 50000,
-                     argNumSeed = 6196, argNbCPU = 2, argDiscretize = FALSE, argVerbose = FALSE) {
+                     argNumSeed = 6196, argNbCPU = 2, argDiscretize = FALSE,
+                     argHcOrders = 24, argHcOrderFreq = 0.5,
+                     argLegacyLrw = FALSE, argVerbose = FALSE) {
+
 
   # ----------------------------------------
   # Initialize the global variables (subEnv variable)
@@ -60,7 +81,9 @@ scalenet <- function(argInData, argOutDir, argEigenPerc = -1, argVarPerc, argSub
                            reconsMeth = argReconsMeth, reconsParam = argReconsParam,
                            presFreqThresh = argPresFreqThresh,
                            nbSamples = argNbSamples, numSeed = argNumSeed, nbCPU = argNbCPU,
-                           disc = argDiscretize, verbose = argVerbose, ioSubEnv = subEnv )
+                           disc = argDiscretize, legacyLrw = argLegacyLrw,
+                           hcOrders = argHcOrders, hcOrderFreq = argHcOrderFreq,
+                           verbose = argVerbose, ioSubEnv = subEnv )
   # -----------------
   #  Recall the main parameters
   # -----------------

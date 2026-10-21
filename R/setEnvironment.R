@@ -28,7 +28,8 @@
 
 setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
                            reconsMeth, reconsParam, presFreqThresh, nbSamples,
-                           numSeed, nbCPU, disc, verbose, ioSubEnv){
+                           numSeed, nbCPU, disc, verbose, ioSubEnv,
+                           legacyLrw = FALSE, hcOrders = 24, hcOrderFreq = 0.5){
 
   # Check some input arguments
   if(is.null(inData)){stop("# --Err-- 1000")}
@@ -47,6 +48,15 @@ setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
 
   ioSubEnv$verbose <- verbose
   ioSubEnv$total.time <- NULL
+
+  # --> Reproduce the pre-fix, column-order-dependent spectral step?
+  if(is.null(legacyLrw)){legacyLrw <- FALSE}
+  ioSubEnv$legacy.lrw <- isTRUE(legacyLrw)
+
+  # --> Bayesian-step ordering consensus (see rMethod.hc). Forced off in legacy
+  # mode, which must reproduce the single-ordering behaviour exactly.
+  ioSubEnv$hc.orders <- if(isTRUE(legacyLrw)) 1L else max(1L, as.integer(hcOrders))
+  ioSubEnv$hc.order.freq <- hcOrderFreq
 
   # --> Mutual information estimator
   # ----| The affinity matrix is based on the mutual information values

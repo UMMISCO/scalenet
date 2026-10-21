@@ -18,9 +18,13 @@ computeEigenVectVal <- function(ioSubEnv){
     if(!dir.exists(tmp.path)){dir.create(tmp.path)}
 
     # MAKE EIGEN
-    tmp.path.eigen.vect <- file.path(tmp.path, gsub(".txt$", "_eigenvect.rds", tmp.inputFileName))
-    tmp.path.eigen.values <- file.path(tmp.path, gsub(".txt$", "_eigenval.rds", tmp.inputFileName))
-    tmp.path.eigen.time <- file.path(tmp.path, gsub(".txt$", "_eigen.time.rds", tmp.inputFileName))
+    # --!-- As in LaplacianRW, the cache key must carry the variant: eigenvectors
+    # of Lsym mapped back to Lrw are not the eigenvectors the legacy path
+    # produces, so a cache from one must never be reloaded for the other.
+    tmp.variant <- if(isTRUE(ioSubEnv$legacy.lrw)) "_lrwLegacy" else "_lsym"
+    tmp.path.eigen.vect <- file.path(tmp.path, gsub(".txt$", paste0("_eigenvect", tmp.variant, ".rds"), tmp.inputFileName))
+    tmp.path.eigen.values <- file.path(tmp.path, gsub(".txt$", paste0("_eigenval", tmp.variant, ".rds"), tmp.inputFileName))
+    tmp.path.eigen.time <- file.path(tmp.path, gsub(".txt$", paste0("_eigen", tmp.variant, ".time.rds"), tmp.inputFileName))
   }
 
   if(!file.exists(ifelse(is.null(tmp.path.eigen.vect), "", tmp.path.eigen.vect))){
@@ -41,6 +45,40 @@ computeEigenVectVal <- function(ioSubEnv){
 
       ioSubEnv$eigen.values <- sort(ioSubEnv$eigen.values, decreasing = F, method = "quick")
       ioSubEnv$eigen.vectors <- ioSubEnv$eigen.vectors[,rev(seq_len(ncol(ioSubEnv$eigen.vectors)))]
+
+      if(!isTRUE(ioSubEnv$legacy.lrw)){
+
+        # LaplacianRW decomposed Lsym, so these are Lsym's eigenvectors. Map them
+        # back to Lrw's: Lrw = D^-1/2.Lsym.D^1/2, hence v_Lrw = D^-1/2.u_Lsym for
+        # the same eigenvalue.
+        tmp.degree <- ioSubEnv$decompose.degree
+        if(is.null(tmp.degree)){
+          # decompose.mat came from the cache; the degrees are recoverable from
+          # the (already zero-degree-filtered) affinity matrix.
+          tmp.degree <- colSums(ioSubEnv$affinity.mat, na.rm = TRUE)
+        }
+        ioSubEnv$eigen.vectors <- ioSubEnv$eigen.vectors / sqrt(tmp.degree)
+
+        # An eigenvector is only defined up to sign and the solver's choice is
+        # not permutation-stable; a flip swaps an eigenvector's G+ and G- subsets.
+        # Pin it with a rule that does not depend on the row order: the sign of
+        # the column sum, falling back to the largest-magnitude component (ties
+        # broken by variable name) when that sum is ~0.
+        tmp.names <- rownames(ioSubEnv$eigen.vectors)
+        for(iCol in seq_len(ncol(ioSubEnv$eigen.vectors))){
+          tmp.v <- ioSubEnv$eigen.vectors[, iCol]
+          tmp.s <- sum(tmp.v)
+          if(abs(tmp.s) > 1e-12){
+            tmp.sign <- sign(tmp.s)
+          } else {
+            tmp.max <- max(abs(tmp.v))
+            tmp.cand <- which(abs(abs(tmp.v) - tmp.max) <= 1e-15)
+            tmp.pick <- tmp.cand[order(tmp.names[tmp.cand])][1]
+            tmp.sign <- sign(tmp.v[tmp.pick])
+          }
+          if(tmp.sign < 0){ ioSubEnv$eigen.vectors[, iCol] <- -tmp.v }
+        }
+      }
 
     } else { cat(stop("# Not implemented yet...")) }
 

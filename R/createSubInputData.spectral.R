@@ -10,8 +10,13 @@ createSubInputData.spectral <- function( ioSubEnv, outDirPath ){
   doParallel::registerDoParallel(cores = ioSubEnv$nbCPU)
   tmpOut <- foreach(iEigen=c(2:ncol(ioSubEnv$eigen.vectors))) %dopar% {
 
-    # Sort the eigen vector elements in decreasing order
-    tmp.elts <- sort(ioSubEnv$eigen.vectors[,iEigen], decreasing = TRUE, method = "quick")
+    # Sort the eigen vector elements in decreasing order.
+    # --!-- sort(method = "quick") is NOT stable, so tied elements used to be
+    # ordered unpredictably and the G+,m / G-,m cut could land differently on
+    # the same data. Order by value, then by variable name, so ties are broken
+    # the same way regardless of the input column order.
+    tmp.vect <- ioSubEnv$eigen.vectors[, iEigen]
+    tmp.elts <- tmp.vect[order(-tmp.vect, names(tmp.vect))]
 
     # Get the G+,m sub dataset, ie. with the m variables corresponding to the m highest eigen vector elements
     # --!!--> make sure the pairs of variables are in the same order as in the original dataset (splData)
