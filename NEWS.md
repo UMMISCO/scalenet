@@ -1,13 +1,13 @@
-# scalenet news
+# scalenet 1.2.4
 
-## Unreleased — reconstruction no longer depends on the input layout
+## Reconstruction no longer depends on the input layout
 
 Shuffling the columns of an input matrix changed the reconstructed network, and
 renaming the variables changed it again, while the data stayed identical. On four
 genus presence/absence matrices the ARACNE edge Jaccard across 10 column
 permutations was **0.28–0.45**; it is now **1.0000**.
 
-### The spectral step decomposed the wrong matrix
+## The spectral step decomposed the wrong matrix
 
 `LaplacianRW()` built `decompose.mat = diag(n) - D^-1 %*% W`, the random-walk
 Laplacian `Lrw`, which is **not symmetric** — and `computeEigenVectVal()` then
@@ -41,14 +41,14 @@ beside the input and reload them when present. The file names now carry the
 variant (`_decompLsym` vs `_decompLrwLegacy`), because a cache written before this
 change would otherwise be reloaded after it and silently reinstate the bug.
 
-### Variable subsets were cut on unstable ties
+## Variable subsets were cut on unstable ties
 
 `createSubInputData.spectral()` ranked eigenvector elements with
 `sort(..., method = "quick")`, which is **not stable**, so tied elements were
 ordered unpredictably and the `G+,m` / `G-,m` cut could fall differently on the
 same data. It now orders by value and then by variable name.
 
-### Hill climbing followed the column order
+## Hill climbing followed the column order
 
 `bnlearn::hc()` keeps the first best-scoring move it finds, so the order in which
 it visits candidates decides every tie and steers the greedy path — and it visits
@@ -76,7 +76,7 @@ consensus the restarts are redundant; set `restart = 0` in `argReconsParam` when
 you turn orderings on. Unlike the Rust port's CLI, this function does not override
 a restart count you passed.
 
-### Also fixed
+## Also fixed
 
 `createSubOutputGraphs()` read the reconstruction parameters flat
 (`recons.param[["estimator"]]`) on the `spectral` path but nested
@@ -85,7 +85,7 @@ a restart count you passed.
 spectral + ARACNE call passed an empty estimator to `minet` and died with
 "unknown estimator". Both forms are now accepted.
 
-### Cross-validation against the Rust port
+## Cross-validation against the Rust port
 
 For both the legacy and the fixed path, this package and
 [xscalenet](https://github.com/gmtsciencedev/xscalenet) produce **identical edge

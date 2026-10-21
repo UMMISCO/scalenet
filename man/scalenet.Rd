@@ -17,6 +17,9 @@ scalenet(
   argNumSeed = 6196,
   argNbCPU = 2,
   argDiscretize = FALSE,
+  argHcOrders = 24,
+  argHcOrderFreq = 0.5,
+  argLegacyLrw = FALSE,
   argVerbose = FALSE
 )
 }
@@ -27,6 +30,8 @@ scalenet(
 
 \item{argEigenPerc}{percentage of eigen vectors to use,
 if -1 this percentage is set with an internal elbow-like heuristic method}
+
+\item{argVarPerc}{fraction of the variables to put in each subgraph (m = ceil(argVarPerc * p))}
 
 \item{argSubsetType}{variable subset selection, subset of variables can be selected from:
 (1) eigen vector elements ("spectral"), (2) spectral k-means clusters ("spectralKmeans"),
@@ -39,6 +44,10 @@ if -1 this percentage is set with an internal elbow-like heuristic method}
 \item{argReconsParam}{reconstruction method parameters, (1) [bayes_hc] "-s score -r restartNumber",
 (2) [aracne] "-p epsilon -w estimator"}
 
+\item{argPresFreqThresh}{presence-frequency thresholds; an edge is kept in the global
+network when it was inferred in at least this share of the subgraphs that could have
+inferred it. One network is written per threshold.}
+
 \item{argNbSamples}{number of observation to sample from the original dataset, if more than the
 original number of observations, the maximum number of available samples is considered}
 
@@ -46,10 +55,34 @@ original number of observations, the maximum number of available samples is cons
 
 \item{argNbCPU}{number of CPU to be used for local recontructions}
 
+\item{argDiscretize}{PAM-discretize the numeric columns before reconstruction. Mutual
+information needs discrete levels, so continuous input must be discretized.}
+
+\item{argHcOrders}{number of random variable orderings the Bayesian step fuses per
+subgraph (ordering consensus). 1 = a single ordering, which makes the learned
+network a function of that arbitrary order, so renaming variables moves arcs.
+Ignored by aracne, which is order-invariant already.}
+
+\item{argHcOrderFreq}{fraction of those orderings an arc must appear in to be kept}
+
+\item{argLegacyLrw}{reproduce the pre-fix, column-order-dependent spectral step:
+decompose the lower triangle of the asymmetric Lrw (what eigen(symmetric = TRUE)
+reads) instead of the symmetric normalised Laplacian. Only for regenerating
+results published before the fix; see LaplacianRW.}
+
 \item{argVerbose}{display details}
 }
 \description{
 scalenet reconstruct network from local prediction based on subset of variables selected
 with different clustering methods. The default subset selection correspond to the core
 scaleNet approach. The other subset selection methods are left for comparison.
+}
+\details{
+Hill-climbing restarts and ordering consensus both exist to diversify the greedy
+search, so with argHcOrders > 1 the restarts are largely redundant: they add
+variation that the consensus never averages away. Measured in the Rust port on
+the same data, keeping 21 restarts alongside the orderings lowered reproducibility
+and doubled the runtime. Unlike the Rust CLI, this function does not silently
+override the restart count you pass -- set restart = 0 in argReconsParam when you
+turn ordering consensus on.
 }

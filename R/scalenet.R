@@ -8,6 +8,12 @@
 #' @param argOutDir output directory file, will be created
 #' @param argEigenPerc percentage of eigen vectors to use,
 #' if -1 this percentage is set with an internal elbow-like heuristic method
+#' @param argVarPerc fraction of the variables to put in each subgraph (m = ceil(argVarPerc * p))
+#' @param argPresFreqThresh presence-frequency thresholds; an edge is kept in the global
+#' network when it was inferred in at least this share of the subgraphs that could have
+#' inferred it. One network is written per threshold.
+#' @param argDiscretize PAM-discretize the numeric columns before reconstruction. Mutual
+#' information needs discrete levels, so continuous input must be discretized.
 #' @param argSubsetType variable subset selection, subset of variables can be selected from:
 #' (1) eigen vector elements ("spectral"), (2) spectral k-means clusters ("spectralKmeans"),
 #' (3) spectral fuzzy c-means clusters ("spectralFuzzyCmeansOrder" or "spectralFuzzyCmeansSample")

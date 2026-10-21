@@ -1,8 +1,3 @@
-#' createSubInputData
-#'
-#'
-#' @param ioSubEnv a global environment variable
-
 # Reconstruction parameters may be given either flat (list(estimator = ..., epsilon = ...))
 # or nested under the method name (list(aracne = list(estimator = ...))), which is the form
 # scalenet()'s own documentation shows. The spectral branch below used to read only the flat
@@ -15,6 +10,13 @@
   }
   p[[key]]
 }
+
+#' createSubInputData
+#'
+#'
+#' @param ioSubEnv a global environment variable
+
+
 
 createSubOutputGraphs <- function( ioSubEnv ){
 

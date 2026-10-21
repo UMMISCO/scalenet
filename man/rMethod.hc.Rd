@@ -10,7 +10,10 @@ rMethod.hc(
   argScore = "bde",
   argRestart = 20,
   argVerbose = FALSE,
-  maxIter = 10000
+  maxIter = 10000,
+  argOrders = 1,
+  argOrderFreq = 0.5,
+  argSeed = 6196
 )
 }
 \arguments{
@@ -23,6 +26,23 @@ rMethod.hc(
 \item{argRestart}{search and score restart}
 
 \item{argVerbose}{display details}
+
+\item{maxIter}{cap on hill-climbing iterations, passed to bnlearn::hc}
+
+\item{argOrders}{number of random variable orderings to fuse (ordering consensus).
+Hill climbing keeps the first best-scoring move it finds, so the order in which
+bnlearn visits candidates decides every tie and steers the greedy path. The base
+order is first made canonical from the variables' own data, which already makes
+the result invariant to renaming and to column order; argOrders > 1 then averages
+over that many random orderings so the network does not rest on one arbitrary
+scan order either, keeping arcs that recur in at least argOrderFreq of them.}
+
+\item{argOrderFreq}{fraction of the orderings an arc must appear in to be kept}
+
+\item{argSeed}{seed for the orderings; the caller derives it from the run seed and
+the subgraph identity, neither of which depends on variable names or column
+positions, so the consensus stays reproducible without reintroducing a dependence
+on the input layout}
 }
 \description{
 rMethod.hc reconstruct network using the hhill climbing approach (from bnlearn package)

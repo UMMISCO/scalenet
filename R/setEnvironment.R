@@ -19,6 +19,12 @@
 #' (2) [aracne] "-p epsilon -w estimator"
 #' @param nbSamples number of observation to sample from the original dataset, if more than the
 #' original number of observations, the maximum number of available samples is considered
+#' @param varPerc fraction of the variables to put in each subgraph
+#' @param presFreqThresh presence-frequency thresholds, one global network per threshold
+#' @param disc PAM-discretize the numeric columns before reconstruction
+#' @param legacyLrw reproduce the pre-fix, column-order-dependent spectral step (see LaplacianRW)
+#' @param hcOrders number of random variable orderings the Bayesian step fuses per subgraph
+#' @param hcOrderFreq fraction of those orderings an arc must appear in to be kept
 #' @param numSeed random seed to sample observations from the original dataset
 #' @param nbCPU number of CPU to be used for local recontructions
 #' @param verbose display details

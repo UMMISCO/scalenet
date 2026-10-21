@@ -18,6 +18,7 @@
 #' the subgraph identity, neither of which depends on variable names or column
 #' positions, so the consensus stays reproducible without reintroducing a dependence
 #' on the input layout
+#' @param maxIter cap on hill-climbing iterations, passed to bnlearn::hc
 #' @param argVerbose display details
 #'
 #' @export

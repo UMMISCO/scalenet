@@ -18,7 +18,10 @@ setEnvironment(
   nbCPU,
   disc,
   verbose,
-  ioSubEnv
+  ioSubEnv,
+  legacyLrw = FALSE,
+  hcOrders = 24,
+  hcOrderFreq = 0.5
 )
 }
 \arguments{
@@ -28,6 +31,8 @@ setEnvironment(
 
 \item{eigenPerc}{percentage of eigen vectors to use,
 if -1 this percentage is set with an internal elbow-like heuristic method}
+
+\item{varPerc}{fraction of the variables to put in each subgraph}
 
 \item{subsetType}{variable subset selection, subset of variables can be selected from:
 (1) eigen vector elements ("spectral"),
@@ -43,6 +48,8 @@ if -1 this percentage is set with an internal elbow-like heuristic method}
 (1) [bayes_hc] "-s score -r restartNumber",
 (2) [aracne] "-p epsilon -w estimator"}
 
+\item{presFreqThresh}{presence-frequency thresholds, one global network per threshold}
+
 \item{nbSamples}{number of observation to sample from the original dataset, if more than the
 original number of observations, the maximum number of available samples is considered}
 
@@ -50,9 +57,17 @@ original number of observations, the maximum number of available samples is cons
 
 \item{nbCPU}{number of CPU to be used for local recontructions}
 
+\item{disc}{PAM-discretize the numeric columns before reconstruction}
+
 \item{verbose}{display details}
 
 \item{ioSubEnv}{a global environment variable}
+
+\item{legacyLrw}{reproduce the pre-fix, column-order-dependent spectral step (see LaplacianRW)}
+
+\item{hcOrders}{number of random variable orderings the Bayesian step fuses per subgraph}
+
+\item{hcOrderFreq}{fraction of those orderings an arc must appear in to be kept}
 }
 \description{
 setEnvironment sets all required information in en env() variables for reconstruction
