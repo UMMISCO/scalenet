@@ -19,6 +19,12 @@
 #' (2) [aracne] "-p epsilon -w estimator"
 #' @param nbSamples number of observation to sample from the original dataset, if more than the
 #' original number of observations, the maximum number of available samples is considered
+#' @param varPerc fraction of the variables to put in each subgraph
+#' @param presFreqThresh presence-frequency thresholds, one global network per threshold
+#' @param disc PAM-discretize the numeric columns before reconstruction
+#' @param legacyLrw reproduce the pre-fix, column-order-dependent spectral step (see LaplacianRW)
+#' @param hcOrders number of random variable orderings the Bayesian step fuses per subgraph
+#' @param hcOrderFreq fraction of those orderings an arc must appear in to be kept
 #' @param numSeed random seed to sample observations from the original dataset
 #' @param nbCPU number of CPU to be used for local recontructions
 #' @param verbose display details
@@ -28,7 +34,8 @@
 
 setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
                            reconsMeth, reconsParam, presFreqThresh, nbSamples,
-                           numSeed, nbCPU, disc, verbose, ioSubEnv){
+                           numSeed, nbCPU, disc, verbose, ioSubEnv,
+                           legacyLrw = FALSE, hcOrders = 24, hcOrderFreq = 0.5){
 
   # Check some input arguments
   if(is.null(inData)){stop("# --Err-- 1000")}
@@ -47,6 +54,15 @@ setEnvironment <- function(inData, outDir, eigenPerc, varPerc, subsetType,
 
   ioSubEnv$verbose <- verbose
   ioSubEnv$total.time <- NULL
+
+  # --> Reproduce the pre-fix, column-order-dependent spectral step?
+  if(is.null(legacyLrw)){legacyLrw <- FALSE}
+  ioSubEnv$legacy.lrw <- isTRUE(legacyLrw)
+
+  # --> Bayesian-step ordering consensus (see rMethod.hc). Forced off in legacy
+  # mode, which must reproduce the single-ordering behaviour exactly.
+  ioSubEnv$hc.orders <- if(isTRUE(legacyLrw)) 1L else max(1L, as.integer(hcOrders))
+  ioSubEnv$hc.order.freq <- hcOrderFreq
 
   # --> Mutual information estimator
   # ----| The affinity matrix is based on the mutual information values

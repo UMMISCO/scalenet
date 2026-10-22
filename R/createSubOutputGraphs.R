@@ -1,7 +1,22 @@
+# Reconstruction parameters may be given either flat (list(estimator = ..., epsilon = ...))
+# or nested under the method name (list(aracne = list(estimator = ...))), which is the form
+# scalenet()'s own documentation shows. The spectral branch below used to read only the flat
+# form, so the documented spectral + aracne call passed an empty estimator to minet and died
+# with "unknown estimator". Accept both.
+.reconsParam <- function(ioSubEnv, key) {
+  p <- ioSubEnv$recons.param
+  if (!is.null(p[[ioSubEnv$recons.method]][[key]])) {
+    return(p[[ioSubEnv$recons.method]][[key]])
+  }
+  p[[key]]
+}
+
 #' createSubInputData
 #'
 #'
 #' @param ioSubEnv a global environment variable
+
+
 
 createSubOutputGraphs <- function( ioSubEnv ){
 
@@ -23,14 +38,20 @@ createSubOutputGraphs <- function( ioSubEnv ){
     # Build a call template
     cmd.template <- ""
     if(ioSubEnv$recons.method == "bayes_hc"){
+      # argSeed is built from the run seed, the eigenvector number and the
+      # G+/G- sign only -- all invariant to variable names and column order.
       cmd.template <- paste( "rMethod.hc(argInData = '", subInData.filePath.template, "', argOutDir = '", subOutData.filePath.template,
-                             "', argScore = '", ioSubEnv$recons.param[["score"]], "', argRestart = ",
-                             ioSubEnv$recons.param[["restart"]], ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
+                             "', argScore = '", .reconsParam(ioSubEnv, "score"), "', argRestart = ",
+                             .reconsParam(ioSubEnv, "restart"),
+                             ", argOrders = ", ioSubEnv$hc.orders,
+                             ", argOrderFreq = ", ioSubEnv$hc.order.freq,
+                             ", argSeed = ", ioSubEnv$numSeed, " + 2L * XXX_IESEED_XXX + XXX_SIGNNUM_XXX",
+                             ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
 
     } else if(ioSubEnv$recons.method == "aracne"){
       cmd.template <- paste( "rMethod.aracne(argInData = '", subInData.filePath.template, "', argOutDir = '", subOutData.filePath.template,
-                             "', argEstimator = '", ioSubEnv$recons.param[["estimator"]], "', argEpsilon = ",
-                             ioSubEnv$recons.param[["epsilon"]], ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
+                             "', argEstimator = '", .reconsParam(ioSubEnv, "estimator"), "', argEpsilon = ",
+                             .reconsParam(ioSubEnv, "epsilon"), ", argVerbose = ", as.character(ioSubEnv$verbose), ")", sep = "")
     }
 
     # --> set with the eigen value number and sign
@@ -39,7 +60,15 @@ createSubOutputGraphs <- function( ioSubEnv ){
                               cmd.template.split[2], seq_len(ncol(ioSubEnv$eigen.vectors))[-1],
                               cmd.template.split[3], sep='')
 
-    cmd.all <- c(gsub("XXX_SIGN_XXX", "pos", cmd.iEigen.paste), gsub("XXX_SIGN_XXX", "neg", cmd.iEigen.paste))
+    # XXX_IESEED_XXX carries the eigenvector number into the per-subgraph seed.
+    # It is a separate token from XXX_IEIGEN_XXX on purpose: the split above
+    # expects that one to occur exactly twice (the input and output paths).
+    tmp.iEigen <- seq_len(ncol(ioSubEnv$eigen.vectors))[-1]
+    cmd.iEigen.paste <- mapply(function(cmd, ie) gsub("XXX_IESEED_XXX", ie, cmd, fixed = TRUE),
+                               cmd.iEigen.paste, tmp.iEigen, USE.NAMES = FALSE)
+
+    cmd.all <- c(gsub("XXX_SIGNNUM_XXX", "0L", gsub("XXX_SIGN_XXX", "pos", cmd.iEigen.paste)),
+                 gsub("XXX_SIGNNUM_XXX", "1L", gsub("XXX_SIGN_XXX", "neg", cmd.iEigen.paste)))
 
     # Call the command in parallel
 #     doParallel::registerDoParallel(cores = ioSubEnv$nbCPU)

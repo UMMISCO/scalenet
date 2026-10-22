@@ -38,9 +38,15 @@ discretize <- function(argInData, argDisc = "pamk", argBins = 5,
   # Set a copy where the discrete values will be stored
   myData.disc <- myData
 
-  # Explore data and find numerical features
-  prettyData <- prettyR::describe(myData, num.desc=c("min","mean","median","max","var","sd","valid.n"))
-  numeric.colNames <- names(prettyData$Numeric)
+  # Explore data and find numerical features.
+  # This used to call prettyR::describe() and keep names(.$Numeric). prettyR has
+  # been ARCHIVED from CRAN, so depending on it made the package uninstallable
+  # from a clean machine. describe() classifies a column as Numeric with exactly
+  # `which(sapply(x, is.numeric))` -- the line below is that test, and nothing
+  # else of describe()'s output was ever used. Verified identical on every
+  # column type the function can be handed (numeric, integer, character, factor,
+  # logical, with and without NA) and on the bundled fixture.
+  numeric.colNames <- names(myData)[vapply(myData, is.numeric, logical(1))]
 
   if(length(numeric.colNames)>0){
 
@@ -451,7 +457,7 @@ discretize <- function(argInData, argDisc = "pamk", argBins = 5,
 #   myData.disc <- myData
 #
 #   # Explore data and find numerical features
-#   prettyData <- prettyR::describe(myData, num.desc=c("min","mean","median","max","var","sd","valid.n"))
+#   numeric.colNames <- names(myData)[vapply(myData, is.numeric, logical(1))]
 #   numeric.colNames <- names(prettyData$Numeric)
 #
 #   if(length(numeric.colNames)>0){

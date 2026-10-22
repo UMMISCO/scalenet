@@ -75,8 +75,13 @@ LaplacianRW <- function(ioSubEnv){
 
   if(!is.null(ioSubEnv$inputData.filePath)){
     # MAKE DECOMPOSE
-    tmp.path.decompose.mat <- file.path(tmp.path, gsub(".txt$", "_decomp.mat.rds", tmp.inputFileName))
-    tmp.path.decompose.mat.time <- file.path(tmp.path, gsub(".txt$", "_decomp.time.rds", tmp.inputFileName))
+    # --!-- The cached matrix depends on WHICH matrix we decompose (Lsym vs the
+    # legacy asymmetric Lrw), so the variant has to be part of the file name.
+    # Without this a cache written before the fix would be reloaded after it and
+    # silently reinstate the column-order dependence.
+    tmp.variant <- if(isTRUE(ioSubEnv$legacy.lrw)) "_decompLrwLegacy" else "_decompLsym"
+    tmp.path.decompose.mat <- file.path(tmp.path, gsub(".txt$", paste0(tmp.variant, ".mat.rds"), tmp.inputFileName))
+    tmp.path.decompose.mat.time <- file.path(tmp.path, gsub(".txt$", paste0(tmp.variant, ".time.rds"), tmp.inputFileName))
   }
 
   if(!file.exists(ifelse(is.null(tmp.path.affinity.mat), "", tmp.path.decompose.mat))){
@@ -126,11 +131,35 @@ LaplacianRW <- function(ioSubEnv){
         cat("# -----------------------------\n")
       }
 
-      # Invert the degree matrix
-      tmp.degree.inv <- solve(tmp.degree)
+      # Keep the degree vector: computeEigenVectVal needs it to map the
+      # eigenvectors of Lsym back to those of Lrw.
+      ioSubEnv$decompose.degree <- diag(tmp.degree)
+      tmp.n <- nrow(ioSubEnv$affinity.mat)
+      tmp.names <- colnames(ioSubEnv$affinity.mat)
 
-      # Compute the Lwr matrix
-      ioSubEnv$decompose.mat = (diag(nrow(ioSubEnv$affinity.mat)) - tmp.degree.inv %*% ioSubEnv$affinity.mat)
+      if(isTRUE(ioSubEnv$legacy.lrw)){
+
+        # --!-- LEGACY, column-order dependent. Lrw = I - D^-1.W is NOT
+        # symmetric, yet computeEigenVectVal decomposes it with
+        # eigen(symmetric = TRUE), which reads only the LOWER triangle: entry
+        # (i,j) is taken as -W[i,j]/D[i] with i the larger index. Permuting the
+        # input columns therefore changes the matrix being decomposed, not just
+        # its row/column order, so the eigenvectors, the variable subsets and
+        # every reconstructed edge change with it. Kept only to regenerate
+        # previously published results.
+        tmp.degree.inv <- solve(tmp.degree)
+        ioSubEnv$decompose.mat = (diag(tmp.n) - tmp.degree.inv %*% ioSubEnv$affinity.mat)
+
+      } else {
+
+        # Lsym = I - D^-1/2.W.D^-1/2 is symmetric by construction, so permuting
+        # the input permutes the matrix and nothing else. It has the same
+        # eigenvalues as Lrw, and computeEigenVectVal recovers Lrw's
+        # eigenvectors as v = D^-1/2.u (since Lrw = D^-1/2.Lsym.D^1/2).
+        tmp.dh <- diag(1/sqrt(ioSubEnv$decompose.degree), nrow = tmp.n)
+        ioSubEnv$decompose.mat = (diag(tmp.n) - tmp.dh %*% ioSubEnv$affinity.mat %*% tmp.dh)
+      }
+      dimnames(ioSubEnv$decompose.mat) <- list(tmp.names, tmp.names)
 
       # --!-- Time
       ioSubEnv$decompose.mat.time <- (proc.time() - time.laplacian.start)
