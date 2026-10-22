@@ -1,7 +1,7 @@
 Package: scalenet
 Type: Package
 Title: Network reconstruction from high-dimensional data based on spectral decomposition and consensus strategy
-Version: 1.2.3
+Version: 1.2.4
 Date: 2025-08-28
 Author: Severine Affeldt, Edi Prifti
 Maintainer: Severine Affeldt <edi.prifti@ird.fr>
@@ -13,11 +13,10 @@ Depends: R (>= 4.0.0),
          bnlearn,
          minet,
          fpc,
-         e1071,
-         prettyR
+         e1071
 License: GPL-3 + file LICENSE
 LazyData: TRUE
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Encoding: UTF-8
 Suggests: testthat
 Imports:

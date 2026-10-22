@@ -32,12 +32,6 @@ install.packages(c("doSNOW", "doParallel", "foreach", "bnlearn",
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 BiocManager::install("minet")
 
-# prettyR has been ARCHIVED from CRAN, so it installs from the archive
-install.packages(
-  "https://cran.r-project.org/src/contrib/Archive/prettyR/prettyR_2.2-3.tar.gz",
-  repos = NULL, type = "source"
-)
-
 remotes::install_github("UMMISCO/scalenet")
 ```
 

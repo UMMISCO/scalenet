@@ -21,53 +21,23 @@ jobs:
         with:
           use-public-rspm: true
 
-      # Dependencies are installed explicitly rather than through
-      # setup-r-dependencies, because this package's dependency set defeats
-      # pak's solver: prettyR has been ARCHIVED from CRAN, so the solver stops
-      # at "Can't find package called prettyR" before anything else runs, and
-      # offering the archive tarball alongside does not reconcile with the
-      # dependency by that name. Installing by hand keeps it deterministic.
-      - name: Install dependencies
-        run: |
-          options(warn = 2)                       # a failed install must fail the job
-          install.packages(c(
-            "BiocManager", "rcmdcheck",
-            # Declared in Suggests. R CMD check treats a missing suggested
-            # package as an ERROR, not a note, so it has to be here.
-            "testthat",
-            "doSNOW", "foreach", "doParallel", "bnlearn",
-            "fpc", "e1071", "data.table", "infotheo", "plyr"
-          ))
-          # minet is Bioconductor, not CRAN.
-          BiocManager::install("minet", ask = FALSE, update = FALSE)
-          # prettyR is archived. It is called once, in discretize.R, only to
-          # list which columns are numeric. Base R could do that, but the two
-          # do not classify columns identically, so replacing it would change
-          # which columns get discretized -- a change to validate on its own,
-          # not to slip into a CI commit.
-          install.packages(
-            "https://cran.r-project.org/src/contrib/Archive/prettyR/prettyR_2.2-3.tar.gz",
-            repos = NULL, type = "source"
-          )
-        shell: Rscript {0}
+      # minet is a Bioconductor package, so that repository has to be on the
+      # list before the solver runs. Everything else is plain CRAN -- which only
+      # became true once the dependency on the archived prettyR was removed;
+      # before that the solver could not produce a plan at all.
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+          extra-repositories: https://bioconductor.org/packages/release/bioc
 
       # Gates on ERRORS only. The package reports two warnings that predate this
       # workflow: undeclared NAMESPACE imports, and six Rd files with
       # undocumented arguments -- none of them files this branch touches.
       # Tightening to warnings means fixing those first, which is a packaging
       # change of its own.
-      - name: R CMD check
-        run: |
-          res <- rcmdcheck::rcmdcheck(
-            args = c("--no-manual", "--no-build-vignettes"),
-            error_on = "error", check_dir = "check"
-          )
-          cat("\nwarnings:", length(res$warnings), " notes:", length(res$notes), "\n")
-        shell: Rscript {0}
-
-      - name: Upload check results on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
+      - uses: r-lib/actions/check-r-package@v2
         with:
-          name: R-CMD-check-results
-          path: check
+          error-on: '"error"'
+          args: 'c("--no-manual", "--no-build-vignettes")'
+          upload-snapshots: true
